@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Pro | B2-C1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .correct { border-color: #22c55e !important; background-color: #f0fdf4 !important; }
+        .incorrect { border-color: #ef4444 !important; background-color: #fef2f2 !important; }
+        .shadow-custom { box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen p-4 md:p-8">
+
+    <div class="max-w-2xl mx-auto">
+        <!-- Header & Score -->
+        <header class="flex justify-between items-center mb-8 sticky top-0 bg-slate-50/90 backdrop-blur py-4 z-10">
+            <div>
+                <h1 class="text-2xl font-extrabold text-slate-900">Vocabulary Pro</h1>
+                <p class="text-slate-500 text-sm">B2-C1 Level Practice</p>
+            </div>
+            <div id="score-board" class="bg-slate-900 text-white px-6 py-2 rounded-full font-bold shadow-lg">
+                Бали: <span id="current-score">0</span>
+            </div>
+        </header>
+
+        <div id="task-container" class="space-y-6">
+            <!-- Завдання генеруються динамічно -->
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+        const tasks = [
+            { id: 1, type: 'matching', title: '🧩 1. Matching', items: [{w: 'deputy director', a: 'd'}, {w: 'respiration', a: 'b'}, {w: 'reclined', a: 'c'}, {w: 'equilibrium', a: 'a'}, {w: 'jade', a: 'e'}, {w: 'contracting', a: 'f'}], options: {a: 'balance', b: 'breathing', c: 'lying back', d: 'assistant manager', e: 'green stone', f: 'shrinking'} },
+            { id: 2, type: 'gap-fill', title: '2️⃣ Gap Fill', qs: [{q: "The ________ managed operations.", a: "deputy director"}, {q: "Controlled ________ helps focus.", a: "respiration"}, {q: "She ________ in a chair.", a: "reclined"}, {q: "Emotional ________ is key.", a: "equilibrium"}, {q: "Made of ________.", a: "jade"}, {q: "Muscles keep ________.", a: "contracting"}] },
+            { id: 3, type: 'order', title: '3️⃣ Word Order', qs: [{q: "meeting / the / led / deputy director", a: "the deputy director led the meeting"}, {q: "focus / respiration / improves / controlled", a: "controlled respiration improves focus"}] },
+            { id: 4, type: 'dialogue', title: '4️⃣ Dialogue', qs: [{q: "Who was in charge? The ________.", a: "deputy director"}, {q: "Practicing controlled ________.", a: "respiration"}]},
+            { id: 6, type: 'true-false', title: '6️⃣ True / False', qs: [{q: "Equilibrium means balance.", a: "true"}, {q: "Respiration is digestion.", a: "false"}]}
+        ];
+
+        function renderTasks() {
+            const container = document.getElementById('task-container');
+            container.innerHTML = tasks.map(task => `
+                <div class="card bg-white p-6 rounded-2xl shadow-custom border border-slate-100">
+                    <h2 class="text-xl font-bold mb-5 text-slate-800">${task.title}</h2>
+                    <div class="space-y-4">
+                        ${renderTaskContent(task)}
+                    </div>
+                    <button onclick="checkTask(${task.id})" class="mt-6 w-full bg-slate-100 text-slate-900 py-3 rounded-xl font-semibold hover:bg-slate-200 transition">Перевірити ${task.type === 'matching' ? 'всі' : 'вправи'}</button>
+                </div>
+            `).join('');
+        }
+
+        function renderTaskContent(t) {
+            if (t.type === 'matching') return t.items.map((i, idx) => `
+                <div class="flex items-center gap-3">
+                    <span class="w-1/3 text-sm font-medium text-slate-600">${i.w}</span>
+                    <select id="t${t.id}-${idx}" data-ans="${i.a}" class="w-full bg-slate-50 border border-slate-200 p-2 rounded-lg outline-none focus:ring-2 focus:ring-slate-900">
+                        <option value="">Оберіть...</option>
+                        ${Object.entries(t.options).map(([k, v])=>`<option value="${k}">${v}</option>`).join('')}
+                    </select>
+                </div>`).join('');
+            
+            if (t.type === 'true-false') return t.qs.map((i, idx) => `
+                <div class="flex justify-between items-center bg-slate-50 p-3 rounded-lg">
+                    <p class="text-sm font-medium text-slate-700">${i.q}</p>
+                    <select id="t${t.id}-${idx}" data-ans="${i.a}" class="border border-slate-200 p-1 rounded w-24">
+                        <option value="">?</option><option value="true">True</option><option value="false">False</option>
+                    </select>
+                </div>`).join('');
+
+            return t.qs.map((i, idx) => `<div class="space-y-1"><p class="text-sm italic text-slate-500">${i.q.replace(/________/g, '______')}</p><input type="text" id="t${t.id}-${idx}" data-ans="${i.a}" placeholder="..." class="w-full border-b-2 border-slate-200 focus:border-slate-900 outline-none p-2 transition"></div>`).join('');
+        }
+
+        window.checkTask = (id) => {
+            const inputs = document.querySelectorAll(`[id^="t${id}-"]`);
+            inputs.forEach(el => {
+                const val = el.value.toLowerCase().trim();
+                const ans = el.dataset.ans.toLowerCase();
+                if(val === ans && !el.classList.contains('correct')) {
+                    el.classList.add('correct');
+                    el.classList.remove('incorrect');
+                    score += 10;
+                } else if (val !== ans) {
+                    el.classList.add('incorrect');
+                    el.classList.remove('correct');
+                }
+            });
+            document.getElementById('current-score').innerText = score;
+        };
+
+        window.onload = renderTasks;
+    </script>
+</body>
+</html>
