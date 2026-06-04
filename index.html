@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -83,7 +82,7 @@
 
         /* CHAT & OPTIONS */
         .chat-msg { background: #0c091f; border: 2px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px; font-size: 1.1rem; color: #ffffff; box-shadow: 2px 2px 0px var(--border-color); }
-        .chat-msg.npc::before { content: "🧙‍♂️ Archmage: "; color: var(--accent-pink); font-weight: 800; }
+        .chat-msg.npc::before { content: "рџ§™вЂЌв™‚пёЏ Archmage: "; color: var(--accent-pink); font-weight: 800; }
         .option-btn { width: 100%; background: #1c153a; border: 2px solid var(--border-color); padding: 14px; text-align: left; border-radius: 8px; font-weight: 600; margin-bottom: 8px; cursor: pointer; color: #ffffff; box-shadow: 2px 2px 0px var(--border-color); }
         .option-btn:hover { background: #2a2054; border-color: var(--accent-blue); }
 
@@ -115,20 +114,20 @@
 <body>
 
     <header>
-        <h1>✨ Magic Word Run ✨</h1>
+        <h1>вњЁ Magic Word Run вњЁ</h1>
     </header>
 
     <div class="engine-container" id="engineBox"></div>
 
     <script>
         const runData = {
-            theme: "🔮 Wizard Pack",
+            theme: "рџ”® Wizard Pack",
             words: [
-                { id: "w0", word: "spellbook", translation: "книга заклинань", level: "B1", example: "Open your spellbook on page 7.", definition: "a book containing magical spells", tip: "Core item for any wizard." },
-                { id: "w1", word: "sparkle", translation: "іскритися; блиск; сяйво", level: "B2", example: "The magic crystal began to sparkle.", definition: "to shine brightly with flashes of light", tip: "Can be both a verb and a noun." },
-                { id: "w2", word: "enchantment", translation: "чари; зачарування; магія", level: "B2", example: "The castle was under a powerful enchantment.", definition: "a feeling of great pleasure or a magical spell", tip: "Often used to describe objects bound with magic." },
-                { id: "w3", word: "fairy dust", translation: "чарівний пил; пил феї", level: "B2", example: "She threw some fairy dust to make it fly.", definition: "magical powder that causes wondrous things", tip: "Essential component for mythical illusions." },
-                { id: "w4", word: "illusion", translation: "ілюзія; обман зору", level: "B2", example: "The dragon was just a clever illusion.", definition: "something that looks real but is not", tip: "A trick played on the eyes or mind." }
+                { id: "w0", word: "spellbook", translation: "РєРЅРёРіР° Р·Р°РєР»РёРЅР°РЅСЊ", level: "B1", example: "Open your spellbook on page 7.", definition: "a book containing magical spells", tip: "Core item for any wizard." },
+                { id: "w1", word: "sparkle", translation: "С–СЃРєСЂРёС‚РёСЃСЏ; Р±Р»РёСЃРє; СЃСЏР№РІРѕ", level: "B2", example: "The magic crystal began to sparkle.", definition: "to shine brightly with flashes of light", tip: "Can be both a verb and a noun." },
+                { id: "w2", word: "enchantment", translation: "С‡Р°СЂРё; Р·Р°С‡Р°СЂСѓРІР°РЅРЅСЏ; РјР°РіС–СЏ", level: "B2", example: "The castle was under a powerful enchantment.", definition: "a feeling of great pleasure or a magical spell", tip: "Often used to describe objects bound with magic." },
+                { id: "w3", word: "fairy dust", translation: "С‡Р°СЂС–РІРЅРёР№ РїРёР»; РїРёР» С„РµС—", level: "B2", example: "She threw some fairy dust to make it fly.", definition: "magical powder that causes wondrous things", tip: "Essential component for mythical illusions." },
+                { id: "w4", word: "illusion", translation: "С–Р»СЋР·С–СЏ; РѕР±РјР°РЅ Р·РѕСЂСѓ", level: "B2", example: "The dragon was just a clever illusion.", definition: "something that looks real but is not", tip: "A trick played on the eyes or mind." }
             ],
             gapfill: {
                 text: "Deep inside the wizard's tower, Alistair carefully opened his ancient [S0]. He whispered an incantation, making the runes on the cover [S1] with violet light. To protect his artifacts, he placed a protective [S2] upon the chest. With a handful of glowing [S3], he conjured a magnificent phantasm. To anyone else, it looked real, but it was merely an [S4].",
@@ -192,18 +191,18 @@
         }
 
         function renderMap(target) {
-            target.innerHTML = `<div class="hud-title">📍 PROGRESS MAP: ${runData.theme}</div><div class="map-grid" id="mapNodesGroup"></div>`;
+            target.innerHTML = `<div class="hud-title">рџ“Ќ PROGRESS MAP: ${runData.theme}</div><div class="map-grid" id="mapNodesGroup"></div>`;
             const grid = document.getElementById('mapNodesGroup');
 
             const nodesStructure = [
-                { id: "learn", name: "🌱 Learn Deck" },
-                { id: "match", name: "🔗 Drag & Drop Match" },
-                { id: "gapfill", name: "📝 Story Gap Fill" },
-                { id: "wordorder", name: "🔀 Blocks Word Order" },
-                { id: "dialogue", name: "💬 Dialogue Chat" },
-                { id: "truefalse", name: "✅ True / False Tinder" },
-                { id: "quiz", name: "🏆 Quiz Boss" },
-                { id: "finalBoss", name: "⚔️ Final Boss: The Archmage" }
+                { id: "learn", name: "рџЊ± Learn Deck" },
+                { id: "match", name: "рџ”— Drag & Drop Match" },
+                { id: "gapfill", name: "рџ“ќ Story Gap Fill" },
+                { id: "wordorder", name: "рџ”Ђ Blocks Word Order" },
+                { id: "dialogue", name: "рџ’¬ Dialogue Chat" },
+                { id: "truefalse", name: "вњ… True / False Tinder" },
+                { id: "quiz", name: "рџЏ† Quiz Boss" },
+                { id: "finalBoss", name: "вљ”пёЏ Final Boss: The Archmage" }
             ];
 
             nodesStructure.forEach((node, idx) => {
@@ -213,7 +212,7 @@
 
                 const element = document.createElement('div');
                 element.className = `map-node ${statusClass}`;
-                element.innerHTML = `<span>${node.name}</span> <span>${statusClass === 'completed' ? '✅' : statusClass === 'active' ? '⚡' : '🔒'}</span>`;
+                element.innerHTML = `<span>${node.name}</span> <span>${statusClass === 'completed' ? 'вњ…' : statusClass === 'active' ? 'вљЎ' : 'рџ”’'}</span>`;
                 
                 if(statusClass === "active" || statusClass === "completed") {
                     element.onclick = () => launchNodeTask(node.id);
@@ -235,18 +234,18 @@
             if (nodeId === "finalBoss") runFinalBossView(box);
         }
 
-        // --- 1️⃣ LEARN DECK ---
+        // --- 1пёЏвѓЈ LEARN DECK ---
         function runLearnView(target) {
             const currentWord = runData.words[activeLearnCardIdx];
             target.innerHTML = `
-                <div class="hud-title">🌱 Learn Mode (${activeLearnCardIdx + 1}/${runData.words.length})</div>
+                <div class="hud-title">рџЊ± Learn Mode (${activeLearnCardIdx + 1}/${runData.words.length})</div>
                 <div class="flip-container" onclick="document.getElementById('fCard').classList.toggle('flipped')">
                     <div class="flip-card" id="fCard">
-                        <div class="card-front"><div>✨ ${currentWord.word}</div><div style="font-size:0.7rem; margin-top:10px; color:#8b5cf6;">[CLICK TO CAST FLIP]</div></div>
+                        <div class="card-front"><div>вњЁ ${currentWord.word}</div><div style="font-size:0.7rem; margin-top:10px; color:#8b5cf6;">[CLICK TO CAST FLIP]</div></div>
                         <div class="card-back">
                             <div style="font-size:1.2rem; font-weight:800; color:var(--accent-blue);">${currentWord.translation} (${currentWord.level})</div>
                             <div style="font-size:1rem; color:#ffffff; font-style:italic;">"${currentWord.example}"</div>
-                            <div style="font-size:0.85rem; color:#94a3b8;">🔮 ${currentWord.tip}</div>
+                            <div style="font-size:0.85rem; color:#94a3b8;">рџ”® ${currentWord.tip}</div>
                         </div>
                     </div>
                 </div>
@@ -261,10 +260,10 @@
             };
         }
 
-        // --- 2️⃣ DRAG AND DROP MATCHING ---
+        // --- 2пёЏвѓЈ DRAG AND DROP MATCHING ---
         function runMatchView(target) {
             target.innerHTML = `
-                <div class="hud-title">🔗 Drag & Drop Definitions</div>
+                <div class="hud-title">рџ”— Drag & Drop Definitions</div>
                 <div class="dd-container">
                     <div class="dd-column" id="wordsColumn"></div>
                     <div class="dd-column" id="defsColumn"></div>
@@ -322,7 +321,7 @@
             showFeedback(pass, "match");
         }
 
-        // --- 3️⃣ CUSTOM GAP FILL ---
+        // --- 3пёЏвѓЈ CUSTOM GAP FILL ---
         function runGapFillView(target) {
             let storyHtml = runData.gapfill.text;
             runData.gapfill.options.forEach((opt, idx) => {
@@ -336,7 +335,7 @@
             });
 
             target.innerHTML = `
-                <div class="hud-title">📝 Context Story Fill</div>
+                <div class="hud-title">рџ“ќ Context Story Fill</div>
                 <div style="line-height:2.2; font-size:1.05rem; background:#1c153a; padding:20px; border-radius:12px; border:3px solid #000; color:#fff;">
                     ${storyHtml}
                 </div>
@@ -355,12 +354,12 @@
             showFeedback(pass, "gapfill");
         }
 
-        // --- 4️⃣ WORD ORDER ---
+        // --- 4пёЏвѓЈ WORD ORDER ---
         let currentBlocksOrder = [];
         function runWordOrderView(target) {
             currentBlocksOrder = [];
             target.innerHTML = `
-                <div class="hud-title">🔀 Blocks Scramble Order</div>
+                <div class="hud-title">рџ”Ђ Blocks Scramble Order</div>
                 <div class="block-pool" id="blockPool"></div>
                 <div class="workspace-line" id="workspaceLine" style="color:#fff;"></div>
                 <div class="feedback-alert" id="fAlert"></div>
@@ -383,10 +382,10 @@
         }
         function validateWordOrder() { showFeedback(currentBlocksOrder.join(' ').toLowerCase() === runData.wordorder.correct, "wordorder"); }
 
-        // --- 5️⃣ DIALOGUE ---
+        // --- 5пёЏвѓЈ DIALOGUE ---
         function runDialogueView(target) {
             target.innerHTML = `
-                <div class="hud-title">💬 Interactive Dialogue Chat</div>
+                <div class="hud-title">рџ’¬ Interactive Dialogue Chat</div>
                 <div class="chat-msg npc">${runData.dialogue.npcQuestion}</div>
                 <div id="dialogueOptions"></div>
                 <div class="feedback-alert" id="fAlert"></div>
@@ -399,26 +398,26 @@
             });
         }
 
-        // --- 6️⃣ TRUE / FALSE CENTERED ---
+        // --- 6пёЏвѓЈ TRUE / FALSE CENTERED ---
         function runTrueFalseView(target) {
             target.innerHTML = `
                 <div class="true-false-screen">
-                    <div class="hud-title">✅ True / False Card Swap</div>
+                    <div class="hud-title">вњ… True / False Card Swap</div>
                     <div class="tinder-box">"${runData.truefalse.statement}"</div>
                     <div class="swipe-actions">
-                        <button class="action-btn btn-pink" style="width:140px;" onclick="showFeedback(false === runData.truefalse.correctIs, 'truefalse')">❌ FALSE</button>
-                        <button class="action-btn btn-green" style="width:140px;" onclick="showFeedback(true === runData.truefalse.correctIs, 'truefalse')">✅ TRUE</button>
+                        <button class="action-btn btn-pink" style="width:140px;" onclick="showFeedback(false === runData.truefalse.correctIs, 'truefalse')">вќЊ FALSE</button>
+                        <button class="action-btn btn-green" style="width:140px;" onclick="showFeedback(true === runData.truefalse.correctIs, 'truefalse')">вњ… TRUE</button>
                     </div>
                     <div class="feedback-alert" id="fAlert" style="width:100%; max-width:455px;"></div>
                 </div>
             `;
         }
 
-        // --- 7️⃣ QUIZ BOSS ---
+        // --- 7пёЏвѓЈ QUIZ BOSS ---
         let quizTimerInterval = null;
         function runQuizView(target) {
             target.innerHTML = `
-                <div class="hud-title">🏆 Quiz Boss Encounter</div>
+                <div class="hud-title">рџЏ† Quiz Boss Encounter</div>
                 <div class="timer-bar"><div class="timer-fill" id="tFill" style="width: 100%;"></div></div>
                 <div class="chat-msg" style="font-weight:700; color:#fff;">${runData.quiz.question}</div>
                 <div id="quizOptions"></div>
@@ -442,23 +441,23 @@
             }, tickRate);
         }
 
-        // --- 8️⃣ HARDCORE FINAL BOSS ---
+        // --- 8пёЏвѓЈ HARDCORE FINAL BOSS ---
         function runFinalBossView(target) {
             if(playerHp <= 0) {
-                target.innerHTML = `<div class="hud-title">💀 GAME OVER</div><p style="text-align:center; margin-top:20px;">Бос розгромив твій пул знань. Спробуй знову!</p><button class="action-btn btn-pink" style="margin-top:20px; width:100%;" onclick="playerHp=3; bossRoundIdx=0; renderEngineView()">Restart Run</button>`;
+                target.innerHTML = `<div class="hud-title">рџ’Ђ GAME OVER</div><p style="text-align:center; margin-top:20px;">Р‘РѕСЃ СЂРѕР·РіСЂРѕРјРёРІ С‚РІС–Р№ РїСѓР» Р·РЅР°РЅСЊ. РЎРїСЂРѕР±СѓР№ Р·РЅРѕРІСѓ!</p><button class="action-btn btn-pink" style="margin-top:20px; width:100%;" onclick="playerHp=3; bossRoundIdx=0; renderEngineView()">Restart Run</button>`;
                 return;
             }
 
             if(bossRoundIdx >= runData.finalBoss.rounds.length) {
-                target.innerHTML = `<div class="hud-title">🏆 RUN CLEAR!</div><p style="text-align:center; margin-top:20px; color:var(--accent-green); font-size:1.3rem; font-weight:800;">ВІТАЄМО! Магічний пак повністю засвоєно. Нагорода: +100 XP</p><button class="action-btn btn-purple" style="margin-top:20px; width:100%;" onclick="completedNodes.push('finalBoss'); renderEngineView()">Return Victorious</button>`;
+                target.innerHTML = `<div class="hud-title">рџЏ† RUN CLEAR!</div><p style="text-align:center; margin-top:20px; color:var(--accent-green); font-size:1.3rem; font-weight:800;">Р’Р†РўРђР„РњРћ! РњР°РіС–С‡РЅРёР№ РїР°Рє РїРѕРІРЅС–СЃС‚СЋ Р·Р°СЃРІРѕС”РЅРѕ. РќР°РіРѕСЂРѕРґР°: +100 XP</p><button class="action-btn btn-purple" style="margin-top:20px; width:100%;" onclick="completedNodes.push('finalBoss'); renderEngineView()">Return Victorious</button>`;
                 return;
             }
 
             const currentRound = runData.finalBoss.rounds[bossRoundIdx];
-            let hpHearts = "❤️".repeat(playerHp);
+            let hpHearts = "вќ¤пёЏ".repeat(playerHp);
 
             target.innerHTML = `
-                <div class="hud-title">⚔️ BOSS STAGE: ${runData.finalBoss.title}</div>
+                <div class="hud-title">вљ”пёЏ BOSS STAGE: ${runData.finalBoss.title}</div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-weight:800;">
                     <span>ROUND: ${bossRoundIdx + 1} / 3</span>
                     <span style="color:var(--accent-pink)">YOUR HP: ${hpHearts}</span>
@@ -477,10 +476,10 @@
                 b.onclick = () => {
                     const alertBox = document.getElementById('fAlert'); alertBox.style.display = "block";
                     if(opt.correct) {
-                        alertBox.className = "feedback-alert ok"; alertBox.innerText = "💥 Натиск Боса відбито! Магічний захист витримав.";
+                        alertBox.className = "feedback-alert ok"; alertBox.innerText = "рџ’Ґ РќР°С‚РёСЃРє Р‘РѕСЃР° РІС–РґР±РёС‚Рѕ! РњР°РіС–С‡РЅРёР№ Р·Р°С…РёСЃС‚ РІРёС‚СЂРёРјР°РІ.";
                         bossRoundIdx++; setTimeout(() => { runFinalBossView(target); }, 1500);
                     } else {
-                        alertBox.className = "feedback-alert fail"; alertBox.innerText = "❌ Помилка! Бос пробиває захист. Мінус 1 HP.";
+                        alertBox.className = "feedback-alert fail"; alertBox.innerText = "вќЊ РџРѕРјРёР»РєР°! Р‘РѕСЃ РїСЂРѕР±РёРІР°С” Р·Р°С…РёСЃС‚. РњС–РЅСѓСЃ 1 HP.";
                         playerHp--; setTimeout(() => { runFinalBossView(target); }, 1500);
                     }
                 };
@@ -493,10 +492,10 @@
             const alertBox = document.getElementById('fAlert');
             if(!alertBox) return; alertBox.style.display = 'block';
             if(isCorrect) {
-                alertBox.className = "feedback-alert ok"; alertBox.innerText = "💥 PERFECT! Етап пройдено.";
+                alertBox.className = "feedback-alert ok"; alertBox.innerText = "рџ’Ґ PERFECT! Р•С‚Р°Рї РїСЂРѕР№РґРµРЅРѕ.";
                 setTimeout(() => { markNodeDone(nodeId); }, 1200);
             } else {
-                alertBox.className = "feedback-alert fail"; alertBox.innerText = "❌ Магія зірвалася! Спробуй ще раз.";
+                alertBox.className = "feedback-alert fail"; alertBox.innerText = "вќЊ РњР°РіС–СЏ Р·С–СЂРІР°Р»Р°СЃСЏ! РЎРїСЂРѕР±СѓР№ С‰Рµ СЂР°Р·.";
             }
         }
 
