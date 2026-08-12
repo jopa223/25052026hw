@@ -275,7 +275,7 @@
 
     <script>
         // -------------------------------------------------------------
-        // FULL 42 UPDATED QUESTIONS POOL (UNIFIED 1v1 TEXT, NO EMOJIS IN OPTIONS)
+        // FULL 42 UPDATED QUESTIONS POOL
         // -------------------------------------------------------------
         const rawQuestions = [
             { id: 1, question: "Ти готуєшся до нового квесту. Що приємніше?", options: [{ text: "Обговорити з друзями, хто що робитиме", type: "S", img: "images/q1_a.jpg" }, { text: "Прокачати персонажа перед квестом", type: "A", img: "images/q1_b.jpg" }] },
@@ -314,13 +314,11 @@
             { id: 34, question: "Що було б крутіше?", options: [{ text: "Отримати предмет, який на 50% сильніший за звичайні", type: "A", img: "images/q34_a.jpg" }, { text: "Змусити сильнішого суперника втекти ще до початку бою", type: "K", img: "images/q34_b.jpg" }] },
             { id: 35, question: "Що принесло б більше задоволення?", options: [{ text: "Зібрати повний комплект рідкісного спорядження", type: "A", img: "images/q35_a.jpg" }, { text: "Перемогти гравця з набагато кращим спорядженням", type: "K", img: "images/q35_b.jpg" }] },
             { id: 36, question: "Ти можеш обрати один скілл:", options: [{ text: "Той, що завдає на 50% більше шкоди гравцям", type: "K", img: "images/q36_a.jpg" }, { text: "Той, що подвоює отримання досвіду", type: "A", img: "images/q36_b.jpg" }] },
-            // UPDATED QUESTION 37 (50% to 30%)
             { id: 37, question: "Ти можеш отримати одну з двох нагород:", options: [{ text: "+2 рівні персонажа одразу", type: "A", img: "images/q37_a.jpg" }, { text: "Амулет, який дає +30% швидкості атаки по інших гравцях", type: "K", img: "images/q37_b.jpg" }] },
             { id: 38, question: "Ти можеш отримати одну нагороду", options: [{ text: "+1000 золота", type: "A", img: "images/q38_a.jpg" }, { text: "Зілля, яке робить невидимим на 10 секунд", type: "K", img: "images/q38_b.jpg" }] },
-            { id: 39, question: "Що принесло б більше задоволення?", options: [{ text: "Побачити своє ім'я на першому місці в таблиці лідерів", type: "A", img: "images/q39_a.jpg" }, { text: "Перемогти найкращого друга в дуелі 1v1", type: "K", img: "images/q39_b.jpg" }] },
+            { id: 39, question: "Що принесло б більше задоволення?", options: [{ text: "Побачити свое ім'я на першому місці в таблиці лідерів", type: "A", img: "images/q39_a.jpg" }, { text: "Перемогти найкращого друга в дуелі 1v1", type: "K", img: "images/q39_b.jpg" }] },
             { id: 40, question: "Ти можеш обрати один артефакт:", options: [{ text: "Артефакт із рандомним бонусом від +10% до +100%?", type: "E", img: "images/q40_a.jpg" }, { text: "Артефакт із гарантованим бонусом +50%?", type: "A", img: "images/q40_b.jpg" }] },
-            // NO EMOJIS IN NEW QUESTIONS
-            { id: 41, question: "Який бонус здається крутішим?", options: [{ text: "15% шанс знайти рідрісний предмет замість звичайного", type: "E", img: "images/q41_a.jpg" }, { text: "+25% золота з переможених монстрів", type: "A", img: "images/q41_b.jpg" }] },
+            { id: 41, question: "Який бонус здається крутішим?", options: [{ text: "15% шанс знайти рідрісний предмет замість ззвичайного", type: "E", img: "images/q41_a.jpg" }, { text: "+25% золота з переможених монстрів", type: "A", img: "images/q41_b.jpg" }] },
             { id: 42, question: "Який бонус здається крутішим?", options: [{ text: "Відновити +40% здоров'я союзникам", type: "S", img: "images/q42_a.jpg" }, { text: "25% шанс знайти ключ від прихованої скрині", type: "E", img: "images/q42_b.jpg" }] }
         ];
 
@@ -346,11 +344,28 @@
             "K/E": "Ти непередбачуваний тактик. Тобі подобається заманювати ворогів у пастки, використовувати ландшафт і грати не за правилами."
         };
 
+        // CUSTOM AUDIO CONFIGURATION
+        // Замініть шляхи до файлів на свої за потреби
+        const audioFiles = {
+            click: new Audio('sounds/click.mp3'),
+            back: new Audio('sounds/back.mp3'),
+            victory: new Audio('sounds/victory.mp3')
+        };
+
+        function playCustomSound(key) {
+            try {
+                const sound = audioFiles[key];
+                if (sound) {
+                    sound.currentTime = 0;
+                    sound.play().catch(() => {}); // catch autoplay blocks
+                }
+            } catch(e) {}
+        }
+
         let activeQuestions = [];
         let currentIndex = 0;
         let userAnswers = [];
         let scores = { S: 0, E: 0, A: 0, K: 0 };
-        let audioCtx = null;
 
         function clearCardFocus() {
             if (document.activeElement) {
@@ -383,6 +398,7 @@
 
         function toggleDescription() {
             triggerHaptic('tap');
+            playCustomSound('click');
             const descBox = document.getElementById('combo-desc');
             const btnText = document.getElementById('desc-btn-text');
             
@@ -393,27 +409,6 @@
                 descBox.classList.add('hidden');
                 btnText.innerText = "📖 ДИВИТИСЬ ОПИС";
             }
-        }
-
-        function initAudio() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-        }
-
-        function playSound(freq, duration, type = 'sine') {
-            if (!audioCtx) return;
-            try {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + duration);
-            } catch (e) {}
         }
 
         function showScreen(screenId) {
@@ -432,7 +427,7 @@
 
         function startGame() {
             triggerHaptic('tap');
-            initAudio();
+            playCustomSound('click');
             currentIndex = 0;
             userAnswers = [];
             scores = { S: 0, E: 0, A: 0, K: 0 };
@@ -444,7 +439,6 @@
         }
 
         function updateCheckpointsAndMarker(currentNum) {
-            // Adapt checkpoints to 42 questions
             const total = 42; 
             const pct = ((currentNum - 1) / (total - 1)) * 100;
             
@@ -501,7 +495,7 @@
             if (btn) btn.classList.add('selected-card');
 
             triggerHaptic('tap');
-            playSound(500, 0.1);
+            playCustomSound('click');
             
             userAnswers.push(type);
             scores[type]++;
@@ -519,7 +513,7 @@
         function goBack() {
             clearCardFocus();
             triggerHaptic('tap');
-            playSound(350, 0.1);
+            playCustomSound('back');
             
             if (currentIndex > 0) {
                 currentIndex--;
@@ -535,7 +529,7 @@
             clearCardFocus();
             triggerHaptic('victory');
             triggerConfetti();
-            playSound(700, 0.35);
+            playCustomSound('victory');
             showScreen('results-screen');
 
             document.getElementById('combo-desc').classList.add('hidden');
@@ -548,7 +542,6 @@
             const pData = TYPE_DATA[primary];
             const sData = TYPE_DATA[secondary];
 
-            // adapt max score to 21 (42 total questions / 2 choices per pair)
             const maxScore = 21; 
             const primaryPct = Math.round((scores[primary] / maxScore) * 100);
             const secondaryPct = Math.round((scores[secondary] / maxScore) * 100);
@@ -572,7 +565,6 @@
 
             sortedTypes.slice(2).forEach(t => {
                 const val = scores[t];
-                // adapt max score to 21
                 const pct = Math.round((val / maxScore) * 100);
                 const info = TYPE_DATA[t];
 
