@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 ЯКИЙ ТИ ГРАВЕЦЬ? — 40 QUESTIONS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #0b0f19;
+            color: #ffffff;
+            user-select: none;
+        }
+        .neo-card {
+            background-color: #131b2e;
+            border: 4px solid #000000;
+            box-shadow: 6px 6px 0px #000000;
+        }
+        
+        /* Side-by-Side Choice Cards (3:4) */
+        .option-card {
+            background-color: #1e293b;
+            border: 3px solid #000000;
+            box-shadow: 4px 4px 0px #000000;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .option-card:hover {
+            border-color: #fbbf24;
+            background-color: #26334d;
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 6px 8px 0px #f59e0b;
+        }
+        .option-card:active {
+            transform: translate(2px, 2px) scale(0.98);
+            box-shadow: 2px 2px 0px #000000;
+        }
+        .option-card:hover .card-arrow {
+            transform: translateX(5px);
+            color: #fbbf24;
+        }
+
+        .screen {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.25s ease-in-out;
+        }
+        .screen.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Solid Checkpoint Dots */
+        .checkpoint-dot {
+            background-color: #334155;
+            transition: all 0.2s ease;
+        }
+        .checkpoint-dot.active {
+            background-color: #fbbf24;
+        }
+
+        /* Modern Feature Badge */
+        .feature-badge {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border: 2px solid #334155;
+            transition: all 0.2s ease;
+        }
+        .feature-badge:hover {
+            border-color: #f59e0b;
+            transform: translateX(2px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-3 sm:p-5">
+
+    <div class="w-full max-w-lg neo-card rounded-2xl p-5 sm:p-6 relative overflow-hidden my-auto space-y-6">
+        
+        <div id="start-screen" class="screen active text-center space-y-6 py-4">
+            <div class="flex justify-center">
+                <div class="w-20 h-20 bg-slate-800/90 rounded-2xl border-3 border-black shadow-[4px_4px_0px_#000] flex items-center justify-center text-4xl animate-bounce">
+                    ⚔️
+                </div>
+            </div>
+            
+            <div class="space-y-1.5">
+                <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-amber-400 uppercase drop-shadow-[2px_2px_0px_#000]">
+                    ЯКИЙ ТИ ГРАВЕЦЬ?
+                </h1>
+                <p class="text-xs sm:text-sm text-slate-300 font-semibold max-w-xs mx-auto leading-snug">
+                    Дізнайся, що тобою рухає і в чому твоя сила
+                </p>
+            </div>
+
+            <div class="space-y-2.5 max-w-xs mx-auto pt-2">
+                <div class="feature-badge p-3 rounded-xl flex items-center gap-3.5 text-left">
+                    <span class="text-2xl p-1.5 bg-slate-800 rounded-lg border border-slate-700">🎮</span>
+                    <div>
+                        <div class="text-xs sm:text-sm font-black text-slate-100 uppercase tracking-wide">40 ситуацій</div>
+                        <div class="text-[11px] text-slate-400 font-medium">Швидкі моделі рішень</div>
+                    </div>
+                </div>
+
+                <div class="feature-badge p-3 rounded-xl flex items-center gap-3.5 text-left">
+                    <span class="text-2xl p-1.5 bg-slate-800 rounded-lg border border-slate-700">⚡</span>
+                    <div>
+                        <div class="text-xs sm:text-sm font-black text-amber-400 uppercase tracking-wide">Твоя мотивація</div>
+                        <div class="text-[11px] text-slate-400 font-medium">Що дарує головний драйв</div>
+                    </div>
+                </div>
+
+                <div class="feature-badge p-3 rounded-xl flex items-center gap-3.5 text-left">
+                    <span class="text-2xl p-1.5 bg-slate-800 rounded-lg border border-slate-700">🎯</span>
+                    <div>
+                        <div class="text-xs sm:text-sm font-black text-cyan-400 uppercase tracking-wide">Твої скіли</div>
+                        <div class="text-[11px] text-slate-400 font-medium">Твій унікальний ігровий стиль</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-2 pt-2">
+                <button onclick="startGame()" class="w-full py-4 bg-amber-400 text-black font-black text-xl rounded-xl border-3 border-black shadow-[4px_4px_0px_#000] hover:bg-yellow-300 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_#000] uppercase tracking-wide transition-all cursor-pointer">
+                    🚀 ПОЧАТИ ТЕСТ
+                </button>
+                <p class="text-[11px] text-slate-400 font-bold tracking-widest uppercase">
+                    ~5-7 хв
+                </p>
+            </div>
+        </div>
+
+        <div id="game-screen" class="screen space-y-4">
+            
+            <div class="relative py-2 px-1">
+                <div class="w-full bg-slate-800/90 h-[4px] rounded-full overflow-hidden relative">
+                    <div id="progress-line" class="h-full bg-gradient-to-r from-amber-500 to-amber-300 transition-all duration-300" style="width: 0%;"></div>
+                </div>
+
+                <div class="flex justify-between items-center absolute inset-x-1 top-1/2 -translate-y-1/2 z-10 pointer-events-none">
+                    <span id="cp-1" class="checkpoint-dot w-2.5 h-2.5 rounded-full"></span>
+                    <span id="cp-10" class="checkpoint-dot w-2.5 h-2.5 rounded-full"></span>
+                    <span id="cp-20" class="checkpoint-dot w-2.5 h-2.5 rounded-full"></span>
+                    <span id="cp-30" class="checkpoint-dot w-2.5 h-2.5 rounded-full"></span>
+                    <span id="cp-40" class="checkpoint-dot w-2.5 h-2.5 rounded-full"></span>
+                </div>
+            </div>
+
+            <div class="py-2 text-center min-h-[60px] flex items-center justify-center px-2">
+                <h2 id="q-text" class="text-base sm:text-lg font-extrabold leading-snug text-slate-100 tracking-wide"></h2>
+            </div>
+
+            <div id="cards-grid" class="grid grid-cols-2 gap-3 pt-1">
+                <button id="btn-a" type="button" class="option-card rounded-xl overflow-hidden flex flex-col justify-between text-left group cursor-pointer h-full">
+                    <div class="w-full aspect-[3/4] bg-slate-900 relative flex items-center justify-center border-b-2 border-black overflow-hidden pointer-events-none">
+                        <img id="img-a" src="" alt="Option A Visual" class="w-full h-full object-cover hidden">
+                        <div id="placeholder-a" class="text-slate-500 font-bold text-xs uppercase tracking-widest text-center p-2">
+                            CARD A (3:4)
+                        </div>
+                    </div>
+                    <div class="p-3 flex-1 flex flex-col justify-between space-y-3 pointer-events-none">
+                        <p id="text-a" class="text-xs sm:text-sm font-bold text-slate-100 leading-snug"></p>
+                        <div class="flex justify-end items-center pt-1">
+                            <span class="text-slate-400 font-black text-sm card-arrow transition-all">➔</span>
+                        </div>
+                    </div>
+                </button>
+
+                <button id="btn-b" type="button" class="option-card rounded-xl overflow-hidden flex flex-col justify-between text-left group cursor-pointer h-full">
+                    <div class="w-full aspect-[3/4] bg-slate-900 relative flex items-center justify-center border-b-2 border-black overflow-hidden pointer-events-none">
+                        <img id="img-b" src="" alt="Option B Visual" class="w-full h-full object-cover hidden">
+                        <div id="placeholder-b" class="text-slate-500 font-bold text-xs uppercase tracking-widest text-center p-2">
+                            CARD B (3:4)
+                        </div>
+                    </div>
+                    <div class="p-3 flex-1 flex flex-col justify-between space-y-3 pointer-events-none">
+                        <p id="text-b" class="text-xs sm:text-sm font-bold text-slate-100 leading-snug"></p>
+                        <div class="flex justify-end items-center pt-1">
+                            <span class="text-slate-400 font-black text-sm card-arrow transition-all">➔</span>
+                        </div>
+                    </div>
+                </button>
+            </div>
+
+            <div class="pt-1 text-center">
+                <button onclick="goBack()" type="button" class="text-slate-400 hover:text-amber-400 font-semibold text-xs tracking-wide transition-colors inline-flex items-center gap-1 py-1 px-3 rounded-md hover:bg-slate-800/50 cursor-pointer">
+                    <span>←</span> Змінити відповідь
+                </button>
+            </div>
+        </div>
+
+        <div id="results-screen" class="screen text-center space-y-4 py-2">
+            <div>
+                <span class="text-xs font-black text-amber-400 uppercase tracking-widest">ТВІЙ ПСИХОТИП ГРАВЦЯ</span>
+                <h2 id="combo-title" class="text-2xl sm:text-3xl font-black text-amber-400 uppercase tracking-wide mt-1"></h2>
+            </div>
+
+            <div class="space-y-3 text-left">
+                <div class="bg-slate-800/90 p-4 rounded-xl border-2 border-amber-400 relative space-y-1 shadow-[4px_4px_0px_#f59e0b]">
+                    <span class="absolute -top-3 right-3 bg-amber-400 text-black text-[10px] font-black px-2.5 py-0.5 rounded-full border border-black uppercase tracking-wider">
+                        👑 ГОЛОВНИЙ ТИП
+                    </span>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-2 font-black text-base text-slate-100">
+                            <span id="p-icon" class="text-xl">🏆</span> 
+                            <span id="p-name" class="text-amber-400">Achiever</span>
+                        </div>
+                        <div id="p-pct" class="text-3xl font-black text-amber-400">0%</div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/80 p-3.5 rounded-xl border-2 border-slate-600 relative space-y-1">
+                    <span class="absolute -top-3 right-3 bg-slate-700 text-slate-200 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-black uppercase tracking-wider">
+                        🥈 ПІДТИП
+                    </span>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-2 font-black text-sm text-slate-200">
+                            <span id="s-icon" class="text-lg">🧭</span> 
+                            <span id="s-name" class="text-slate-200">Explorer</span>
+                        </div>
+                        <div id="s-pct" class="text-2xl font-black text-cyan-400">0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-1">
+                <button onclick="toggleDescription()" type="button" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm uppercase tracking-wider rounded-xl border-3 border-black shadow-[4px_4px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_#000] transition-all flex items-center justify-center gap-2 cursor-pointer">
+                    <span id="desc-btn-text">📖 ДИВИТИСЬ ОПИС</span>
+                </button>
+            </div>
+
+            <div id="combo-desc" class="hidden bg-slate-800/90 p-3.5 rounded-xl border-2 border-slate-700 text-left text-xs sm:text-sm text-slate-200 leading-relaxed transition-all">
+                </div>
+
+            <div class="space-y-2 pt-1 text-left" id="bars-container">
+                </div>
+
+            <button onclick="startGame()" type="button" class="w-full py-2.5 bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-bold text-xs uppercase tracking-wider rounded-xl border-2 border-slate-700 transition-all cursor-pointer">
+                🔄 ПРОЙТИ ЗНОВУ
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // -------------------------------------------------------------
+        // FULL 40 QUESTIONS POOL
+        // -------------------------------------------------------------
+        const rawQuestions = [
+            { id: 1, question: "Ти готуєшся до нового квесту. Що приємніше?", options: [{ text: "Обговорити з друзями, хто що робитиме", type: "S", img: "images/q1_a.jpg" }, { text: "Прокачати персонажа перед квестом", type: "A", img: "images/q1_b.jpg" }] },
+            { id: 2, question: "Ти відкрив новий режим гри. Що цікавіше?", options: [{ text: "Покликати друзів і зіграти разом", type: "S", img: "images/q2_a.jpg" }, { text: "Спробувати встановити найкращий результат", type: "A", img: "images/q2_b.jpg" }] },
+            { id: 3, question: "Ти отримав рідкісний предмет. Що приємніше?", options: [{ text: "Оснастити ним свого персонажа й отримати +9% до сили", type: "A", img: "images/q3_a.jpg" }, { text: "Подарувати його другу й дати йому +7% до сили", type: "S", img: "images/q3_b.jpg" }] },
+            { id: 4, question: "Що ти хотів би почути про себе у грі?", options: [{ text: "«Він один із найсильніших гравців»", type: "A", img: "images/q4_a.jpg" }, { text: "«З ним завжди цікаво грати»", type: "S", img: "images/q4_b.jpg" }] },
+            { id: 5, question: "Що для тебе було б крутіше?", options: [{ text: "Щоб тебе знали майже всі на сервері", type: "S", img: "images/q5_a.jpg" }, { text: "Мати найбагатший інвентар на сервері", type: "A", img: "images/q5_b.jpg" }] },
+            { id: 6, question: "У гільдійному чаті з'явилися новини. Що відкриєш першим?", options: [{ text: "Дізнатися, хто з ким посварився", type: "S", img: "images/q6_a.jpg" }, { text: "Подивитися, які предмети додали в гру", type: "A", img: "images/q6_b.jpg" }] },
+            { id: 7, question: "Тобі дають один бонус. Що обереш?", options: [{ text: "Можливість створити власну гільдію", type: "S", img: "images/q7_a.jpg" }, { text: "Унікальний титул за рідкісне досягнення", type: "A", img: "images/q7_b.jpg" }] },
+            { id: 8, question: "Який спосіб заробітку тобі ближчий?", options: [{ text: "Мати власну таверну", type: "S", img: "images/q8_a.jpg" }, { text: "Робити карти незвіданих територій і продавати їх", type: "E", img: "images/q8_b.jpg" }] },
+            { id: 9, question: "У тебе є вибір для нового сервера. Що обереш?", options: [{ text: "+700 активних гравців", type: "S", img: "images/q9_a.jpg" }, { text: "+5 великих локацій для дослідження", type: "E", img: "images/q9_b.jpg" }] },
+            { id: 10, question: "Що для тебе важливіше в грі?", options: [{ text: "Грати в команді з іншими гравцями", type: "S", img: "images/q10_a.jpg" }, { text: "Знаходити способи використовувати гру не так, як задумали розробники", type: "E", img: "images/q10_b.jpg" }] },
+            { id: 11, question: "Ти знайшов дивну головоломку. Що зробиш?", options: [{ text: "Покличеш друга розібратися разом", type: "S", img: "images/q11_a.jpg" }, { text: "Сам спробуєш зрозуміти, як це працює", type: "E", img: "images/q11_b.jpg" }] },
+            { id: 12, question: "Монстр виявився набагато сильнішим, ніж ти очікував.", options: [{ text: "Запитаєш інших гравців, як його перемогти", type: "S", img: "images/q12_a.jpg" }, { text: "Спробуєш знайти власний спосіб його перемогти", type: "E", img: "images/q12_b.jpg" }] },
+            { id: 13, question: "У групі залишилося одне місце. Кого обереш?", options: [{ text: "Паладина, який захищатиме союзників", type: "S", img: "images/q13_a.jpg" }, { text: "Рейнджера, який шукатиме приховані кімнати", type: "E", img: "images/q13_b.jpg" }] },
+            { id: 14, question: "Ти виграв PvP-бій. Що приємніше?", options: [{ text: "Суперник захоче реваншу", type: "K", img: "images/q14_a.jpg" }, { text: "Суперник захоче грати з тобою", type: "S", img: "images/q14_b.jpg" }] },
+            { id: 15, question: "Гравець забрав твій рідкісний лут. Що зробиш?", options: [{ text: "Запитаєш, навіщо він це зробив", type: "S", img: "images/q15_a.jpg" }, { text: "Запам'ятаєш його і полюватимеш на нього", type: "K", img: "images/q15_b.jpg" }] },
+            { id: 16, question: "Що тебе більше захоплює?", options: [{ text: "Велика подія, де всі взаємодіють між собою", type: "S", img: "images/q16_a.jpg" }, { text: "Бій 1 на 1, де на кону ваш із суперником цінний лут", type: "K", img: "images/q16_b.jpg" }] },
+            { id: 17, question: "Що принесло б більше задоволення?", options: [{ text: "Перемогти сильного суперника в PvP", type: "K", img: "images/q17_a.jpg" }, { text: "Отримати запрошення до найкращої гільдії", type: "S", img: "images/q17_b.jpg" }] },
+            { id: 18, question: "Суперник контролює потрібну тобі територію. Що обереш?", options: [{ text: "Виб'єш його звідти силою", type: "K", img: "images/q18_a.jpg" }, { text: "Домовишся про союз", type: "S", img: "images/q18_b.jpg" }] },
+            { id: 19, question: "Що засмутило б тебе більше?", options: [{ text: "Стати слабшим за своїх суперників", type: "K", img: "images/q19_a.jpg" }, { text: "Втратити свою компанію друзів в грі", type: "S", img: "images/q19_b.jpg" }] },
+            { id: 20, question: "Ти зустрів заклятого ворога, який хоче поговорити. Що зробиш?", options: [{ text: "Запропонуєш йому обмінятися інформацією", type: "S", img: "images/q20_a.jpg" }, { text: "Запропонуєш вирішити суперечку в бою", type: "K", img: "images/q20_b.jpg" }] },
+            { id: 21, question: "У грі з'явився новий бос. Що перевіриш першим?", options: [{ text: "Розібратися, які в нього атаки і здібності", type: "E", img: "images/q21_a.jpg" }, { text: "Які цінні предмети з нього можна отримати", type: "A", img: "images/q21_b.jpg" }] },
+            { id: 22, question: "Чим би ти хотів прославитися?", options: [{ text: "Знати приховані таємниці, про які інші не здогадуються", type: "E", img: "images/q22_a.jpg" }, { text: "Мати унікальне спорядження, якого немає в інших", type: "A", img: "images/q22_b.jpg" }] },
+            { id: 23, question: "Що б ти хотів знати або мати першим?", options: [{ text: "Нову нагороду, якої ще немає у друзів", type: "A", img: "images/q23_a.jpg" }, { text: "Секрет у грі, про який ще ніхто не знає", type: "E", img: "images/q23_b.jpg" }] },
+            { id: 24, question: "Ти шукаєш рідкісний предмет. Що ти дізнаєшся першим?", options: [{ text: "Де він захований і як туди дістатися", type: "E", img: "images/q24_a.jpg" }, { text: "Які випробування треба пройти, щоб його отримати", type: "A", img: "images/q24_b.jpg" }] },
+            { id: 25, question: "Ти відкрив нове випробування. Що принесе більше задоволення?", options: [{ text: "Знайти нестандартний спосіб його пройти", type: "E", img: "images/q25_a.jpg" }, { text: "Набрати якнайбільше очок у цьому випробуванні", type: "A", img: "images/q25_b.jpg" }] },
+            { id: 26, question: "Що було б крутіше?", options: [{ text: "Розкрити секрет боса, який ще ніхто не знайшов", type: "E", img: "images/q26_a.jpg" }, { text: "Отримати предмет боса, який ще ніхто не здобув", type: "A", img: "images/q26_b.jpg" }] },
+            { id: 27, question: "Яку гільдію ти б обрав?", options: [{ text: "Алхіміків, які досліджують дивні властивості предметів", type: "E", img: "images/q27_a.jpg" }, { text: "Асасинів, які виконують замовлення на інших гравців", type: "K", img: "images/q27_b.jpg" }] },
+            { id: 28, question: "У якому змаганні ти хотів би перемогти?", options: [{ text: "Знайти скарб, який ніхто не зміг знайти", type: "E", img: "images/q28_a.jpg" }, { text: "Перемогти суперника на арені", type: "K", img: "images/q28_b.jpg" }] },
+            { id: 29, question: "Ти бачиш, що на локації немає ворогів. Що зробиш?", options: [{ text: "Почнеш шукати те, що тут заховано", type: "E", img: "images/q29_a.jpg" }, { text: "Підеш туди, де є з ким битися", type: "K", img: "images/q29_b.jpg" }] },
+            { id: 30, question: "Яку характеристику прокачаєш першою?", options: [{ text: "Інтелект", type: "E", img: "images/q30_a.jpg" }, { text: "Силу", type: "K", img: "images/q30_b.jpg" }] },
+            { id: 31, question: "Що принесло б більше задоволення?", options: [{ text: "Перемогти складного боса", type: "K", img: "images/q31_a.jpg" }, { text: "Дослідити нове підземелля", type: "E", img: "images/q31_b.jpg" }] },
+            { id: 32, question: "Ти дізнався, що інший гравець полює на тебе. Що обереш?", options: [{ text: "Заманиш його на територію, яку він не знає", type: "E", img: "images/q32_a.jpg" }, { text: "Знайдеш його й нападеш першим", type: "K", img: "images/q32_b.jpg" }] },
+            { id: 33, question: "Ти познайомився з досвідченим гравцем. Що зробиш?", options: [{ text: "Обміняєшся з ним цікавими знаннями про гру", type: "E", img: "images/q33_a.jpg" }, { text: "Запропонуєш йому бій, щоб перевірити свої сили", type: "K", img: "images/q33_b.jpg" }] },
+            { id: 34, question: "Що було б крутіше?", options: [{ text: "Отримати предмет, який на 50% сильніший за ззвичайні", type: "A", img: "images/q34_a.jpg" }, { text: "Змусити сильного суперника втекти ще до початку бою", type: "K", img: "images/q34_b.jpg" }] },
+            { id: 35, question: "Що принесло б більше задоволення?", options: [{ text: "Зібрати повний комплект рідкісного спорядження", type: "A", img: "images/q35_a.jpg" }, { text: "Перемогти гравця з набагато кращим спорядженням", type: "K", img: "images/q35_b.jpg" }] },
+            { id: 36, question: "Ти можеш обрати один скілл:", options: [{ text: "Той, що завдає на 50% більше шкоди гравцям (+DMG)", type: "K", img: "images/q36_a.jpg" }, { text: "Той, що подвоює отримання досвіду (+XP)", type: "A", img: "images/q36_b.jpg" }] },
+            { id: 37, question: "Ти можеш отримати одну з двох нагород:", options: [{ text: "+2 рівні одразу", type: "A", img: "images/q37_a.jpg" }, { text: "Амулет, який дає +50% швидкості атаки по інших гравцях", type: "K", img: "images/q37_b.jpg" }] },
+            { id: 38, question: "Ти можеш отримати одну нагороду:", options: [{ text: "+1000 золота", type: "A", img: "images/q38_a.jpg" }, { text: "Зілля, яке робить невидимим на 10 секунд", type: "K", img: "images/q38_b.jpg" }] },
+            { id: 39, question: "Що принесло б більше задоволення?", options: [{ text: "Побачити своє ім'я на першому місці в таблиці лідерів", type: "A", img: "images/q39_a.jpg" }, { text: "Перемогти найкращого друга в дуелі 1 на 1", type: "K", img: "images/q39_b.jpg" }] },
+            { id: 40, question: "Ти можеш обрати один артефакт:", options: [{ text: "Артефакт із невідомим бонусом від +10% до +100%", type: "E", img: "images/q40_a.jpg" }, { text: "Артефакт із гарантованим бонусом +50%", type: "A", img: "images/q40_b.jpg" }] }
+        ];
+
+        // TYPE METADATA
+        const TYPE_DATA = {
+            A: { name: "Achiever", icon: "🏆", color: "bg-yellow-500", text: "text-yellow-400" },
+            S: { name: "Socializer", icon: "🤝", color: "bg-green-500", text: "text-green-400" },
+            E: { name: "Explorer", icon: "🧭", color: "bg-cyan-500", text: "text-cyan-400" },
+            K: { name: "Killer", icon: "⚔️", color: "bg-red-500", text: "text-red-400" }
+        };
+
+        // DUAL TYPE DESCRIPTIONS
+        const DUAL_DESCRIPTIONS = {
+            "A/S": "Ти любиш досягати конкретних результатів, але найбільше задоволення отримуєш, коли робиш це разом із командою та друзями.",
+            "A/E": "Ти максималіст, який прагне закрити гру на 100%, вивчити кожну таємну локацію та отримати всі можливі ачівки.",
+            "A/K": "Твій стиль — домінувати за рахунок ідеальної прокачки, топового шмоту та чистої переваги у характеристиках.",
+            "S/A": "Для тебе важливі друзі та спільна гра, але ти завжди прагнеш до того, щоб ваша група досягала топових результатів.",
+            "S/E": "Ти душа компанії, яка любить ділитися відкриттями, вивчати лор та досліджувати ігрові світи разом із товаришами.",
+            "S/K": "Ти граєш заради взаємодії з іншими гравцями, але твоя улюблена форма зв'язку — це виклики, суперництво та драма.",
+            "E/A": "Ти дослідник у душі, але з чітким механічним фокусом: знайти найрідкісніші речі й зібрати повний сет колекцій.",
+            "E/S": "Ти шукач пригод, якому найбільше подобається ділитися секретами ігрового світу та допомагати іншим орієнтуватися у грі.",
+            "E/K": "Ти хитрий мисливець. Знаєш кожну стежку та баг карти, щоб використовувати знання світу для несподіваних атак.",
+            "K/A": "Ти безжальний змагальник, для якого перемога над іншим гравцем є головним показником власного високого рівня.",
+            "K/S": "Ти шукач гострих емоцій. Бій для тебе — це головний спосіб соціальної взаємодії та отримання авторитету.",
+            "K/E": "Ти непередбачуваний тактик. Тобі подобається заманювати ворогів у пастки, використовувати ландшафт і грати не за правилами."
+        };
+
+        // GAME STATE
+        let activeQuestions = [];
+        let currentIndex = 0;
+        let userAnswers = [];
+        let scores = { S: 0, E: 0, A: 0, K: 0 };
+        let audioCtx = null;
+
+        function triggerHaptic(type = 'tap') {
+            if (navigator && typeof navigator.vibrate === 'function') {
+                if (type === 'tap') navigator.vibrate(12);
+                else if (type === 'victory') navigator.vibrate([20, 50, 20, 50, 30]);
+            }
+        }
+
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 120,
+                    spread: 80,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+
+        function toggleDescription() {
+            triggerHaptic('tap');
+            const descBox = document.getElementById('combo-desc');
+            const btnText = document.getElementById('desc-btn-text');
+            
+            if (descBox.classList.contains('hidden')) {
+                descBox.classList.remove('hidden');
+                btnText.innerText = "📜 СХОВАТИ ОПИС";
+            } else {
+                descBox.classList.add('hidden');
+                btnText.innerText = "📖 ДИВИТИСЬ ОПИС";
+            }
+        }
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playSound(freq, duration, type = 'sine') {
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function shuffleArray(array) {
+            const arr = JSON.parse(JSON.stringify(array));
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function startGame() {
+            triggerHaptic('tap');
+            initAudio();
+            currentIndex = 0;
+            userAnswers = [];
+            scores = { S: 0, E: 0, A: 0, K: 0 };
+            
+            activeQuestions = shuffleArray(rawQuestions);
+
+            showScreen('game-screen');
+            loadQuestion();
+        }
+
+        function updateCheckpointsAndMarker(currentNum) {
+            const total = 40;
+            const pct = ((currentNum - 1) / (total - 1)) * 100;
+            
+            document.getElementById('progress-line').style.width = `${pct}%`;
+
+            const cps = [1, 10, 20, 30, 40];
+            cps.forEach(num => {
+                const el = document.getElementById(`cp-${num}`);
+                if (currentNum >= num) el.classList.add('active');
+                else el.classList.remove('active');
+            });
+        }
+
+        function loadCardImage(imgId, placeholderId, imgSrc) {
+            const img = document.getElementById(imgId);
+            const placeholder = document.getElementById(placeholderId);
+
+            img.onload = () => {
+                img.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+            };
+            img.onerror = () => {
+                img.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+            };
+
+            img.src = imgSrc;
+        }
+
+        function loadQuestion() {
+            const q = activeQuestions[currentIndex];
+            
+            const currentNum = currentIndex + 1;
+            document.getElementById('q-text').innerText = q.question;
+
+            updateCheckpointsAndMarker(currentNum);
+
+            const optA = q.options[0];
+            const optB = q.options[1];
+
+            document.getElementById('text-a').innerText = optA.text;
+            loadCardImage('img-a', 'placeholder-a', optA.img);
+
+            document.getElementById('text-b').innerText = optB.text;
+            loadCardImage('img-b', 'placeholder-b', optB.img);
+
+            document.getElementById('btn-a').onclick = () => selectOption(optA.type);
+            document.getElementById('btn-b').onclick = () => selectOption(optB.type);
+        }
+
+        function selectOption(type) {
+            triggerHaptic('tap');
+            playSound(500, 0.1);
+            
+            userAnswers.push(type);
+            scores[type]++;
+
+            if (currentIndex < activeQuestions.length - 1) {
+                currentIndex++;
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function goBack() {
+            triggerHaptic('tap');
+            playSound(350, 0.1);
+            
+            if (currentIndex > 0) {
+                currentIndex--;
+                const lastAnswer = userAnswers.pop();
+                if (lastAnswer) scores[lastAnswer]--;
+                loadQuestion();
+            } else {
+                showScreen('start-screen');
+            }
+        }
+
+        function showResults() {
+            triggerHaptic('victory');
+            triggerConfetti();
+            playSound(700, 0.35);
+            showScreen('results-screen');
+
+            // Ensure description stays collapsed on arrival
+            document.getElementById('combo-desc').classList.add('hidden');
+            document.getElementById('desc-btn-text').innerText = "📖 ДИВИТИСЬ ОПИС";
+
+            const sortedTypes = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
+            const primary = sortedTypes[0];
+            const secondary = sortedTypes[1];
+
+            const pData = TYPE_DATA[primary];
+            const sData = TYPE_DATA[secondary];
+
+            const primaryPct = Math.round((scores[primary] / 20) * 100);
+            const secondaryPct = Math.round((scores[secondary] / 20) * 100);
+
+            // Title
+            document.getElementById('combo-title').innerText = `${pData.name} / ${sData.name}`;
+
+            const key = `${primary}/${secondary}`;
+            const descText = DUAL_DESCRIPTIONS[key] || `${pData.name} із сильно вираженими рисами ${sData.name}.`;
+            document.getElementById('combo-desc').innerText = descText;
+
+            // Set Primary Card (Top)
+            document.getElementById('p-icon').innerText = pData.icon;
+            document.getElementById('p-name').innerText = pData.name;
+            document.getElementById('p-pct').innerText = `${primaryPct}%`;
+
+            // Set Secondary Card (Underneath)
+            document.getElementById('s-icon').innerText = sData.icon;
+            document.getElementById('s-name').innerText = sData.name;
+            document.getElementById('s-pct').innerText = `${secondaryPct}%`;
+
+            // Render remaining 2 types in percentage bars ONLY
+            const barsContainer = document.getElementById('bars-container');
+            barsContainer.innerHTML = '';
+
+            sortedTypes.slice(2).forEach(t => {
+                const val = scores[t];
+                const pct = Math.round((val / 20) * 100);
+                const info = TYPE_DATA[t];
+
+                const row = document.createElement('div');
+                row.className = 'space-y-1';
+                row.innerHTML = `
+                    <div class="flex justify-between items-center font-black text-xs">
+                        <span class="flex items-center gap-1.5">${info.icon} ${info.name}</span>
+                        <span class="${info.text}">${pct}%</span>
+                    </div>
+                    <div class="w-full bg-slate-900 h-2.5 rounded-full border border-slate-700 overflow-hidden p-0.5">
+                        <div class="h-full ${info.color} rounded-full" style="width: ${pct}%;"></div>
+                    </div>
+                `;
+                barsContainer.appendChild(row);
+            });
+        }
+    </script>
+</body>
+</html>
