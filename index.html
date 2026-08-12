@@ -186,8 +186,7 @@
                     <div class="w-full aspect-[3/4] bg-slate-900 relative flex items-center justify-center border-b-2 border-black overflow-hidden pointer-events-none shrink-0">
                         <img id="img-a" src="" alt="Option A" class="w-full h-full object-cover hidden">
                         <div id="placeholder-a" class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950 flex flex-col items-center justify-center p-2 text-center">
-                            <span class="text-3xl mb-1">🎮</span>
-                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Варіант A</span>
+                            <span class="text-3xl mb-1">Варіант A</span>
                         </div>
                     </div>
                     <div class="p-2.5 sm:p-3 flex-1 flex flex-col justify-between space-y-2 pointer-events-none">
@@ -202,8 +201,7 @@
                     <div class="w-full aspect-[3/4] bg-slate-900 relative flex items-center justify-center border-b-2 border-black overflow-hidden pointer-events-none shrink-0">
                         <img id="img-b" src="" alt="Option B" class="w-full h-full object-cover hidden">
                         <div id="placeholder-b" class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950 flex flex-col items-center justify-center p-2 text-center">
-                            <span class="text-3xl mb-1">⚡</span>
-                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Варіант B</span>
+                            <span class="text-3xl mb-1">Варіант B</span>
                         </div>
                     </div>
                     <div class="p-2.5 sm:p-3 flex-1 flex flex-col justify-between space-y-2 pointer-events-none">
@@ -224,7 +222,7 @@
 
         <div id="results-screen" class="screen text-center space-y-4 py-2">
             <div>
-                <span class="text-xs font-black text-amber-400 uppercase tracking-widest">ТВІЙ ПСИХОТИП ГРАВЦЯ</span>
+                <span class="text-xs font-black text-amber-400 uppercase tracking-widest">ТВІЙ ПСИХОТИП ГРАВЕЦЬ</span>
                 <h2 id="combo-title" class="text-2xl sm:text-3xl font-black text-amber-400 uppercase tracking-wide mt-1"></h2>
             </div>
 
@@ -242,7 +240,7 @@
                     <span class="absolute -top-3 right-3 bg-amber-400 text-black text-[10px] font-black px-2.5 py-0.5 rounded-full border border-black uppercase tracking-wider">
                         👑 ГОЛОВНИЙ ТИП
                     </span>
-                    <div class="flex justify-between items-center">
+                    <div class="flex justify-between items-center w-full">
                         <div class="flex items-center gap-2 font-black text-base text-slate-100">
                             <span id="p-icon" class="text-xl">🏆</span> 
                             <span id="p-name" class="text-amber-400">Achiever</span>
@@ -255,7 +253,7 @@
                     <span class="absolute -top-3 right-3 bg-slate-700 text-slate-200 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-black uppercase tracking-wider">
                         🥈 ПІДТИП
                     </span>
-                    <div class="flex justify-between items-center">
+                    <div class="flex justify-between items-center w-full">
                         <div class="flex items-center gap-2 font-black text-sm text-slate-200">
                             <span id="s-icon" class="text-lg">🧭</span> 
                             <span id="s-name" class="text-slate-200">Explorer</span>
@@ -277,30 +275,26 @@
 
     <script>
         // -------------------------------------------------------------
-        // FULL 42 UPDATED QUESTIONS POOL
+        // FULL 42 UPDATED QUESTIONS POOL (UNIFIED 1v1 TEXT, NO EMOJIS IN OPTIONS)
         // -------------------------------------------------------------
         const rawQuestions = [
             { id: 1, question: "Ти готуєшся до нового квесту. Що приємніше?", options: [{ text: "Обговорити з друзями, хто що робитиме", type: "S", img: "images/q1_a.jpg" }, { text: "Прокачати персонажа перед квестом", type: "A", img: "images/q1_b.jpg" }] },
             { id: 2, question: "Ти відкрив новий режим гри. Що цікавіше?", options: [{ text: "Покликати друзів і зіграти разом", type: "S", img: "images/q2_a.jpg" }, { text: "Спробувати встановити найкращий результат", type: "A", img: "images/q2_b.jpg" }] },
-            // UPDATED QUESTION 3
-            { id: 3, question: "Ти знайшов два рідкісні предмети. Що обереш?", options: [{ text: "⚔️ Меч — +50% до твоєї атаки", type: "A", img: "images/q3_a.jpg" }, { text: "🛡 Щит — +30% до твого захисту та +20% до захисту союзника", type: "S", img: "images/q3_b.jpg" }] },
+            { id: 3, question: "Ти знайшов два рідкісні предмети. Що обереш?", options: [{ text: "Меч — +50% до твоєї атаки", type: "A", img: "images/q3_a.jpg" }, { text: "Щит — +30% до твого захисту та +20% до захисту союзника", type: "S", img: "images/q3_b.jpg" }] },
             { id: 4, question: "Що ти хотів би почути про себе у грі?", options: [{ text: "«Він один із найсильніших гравців»", type: "A", img: "images/q4_a.jpg" }, { text: "«З ним завжди цікаво грати»", type: "S", img: "images/q4_b.jpg" }] },
             { id: 5, question: "Що для тебе було б крутіше?", options: [{ text: "Щоб тебе знали всі на сервері", type: "S", img: "images/q5_a.jpg" }, { text: "Мати найбагатший інвентар на сервері", type: "A", img: "images/q5_b.jpg" }] },
             { id: 6, question: "У чаті з'явилися новини. Що відкриєш першим?", options: [{ text: "Дізнатися, хто з ким посварився", type: "S", img: "images/q6_a.jpg" }, { text: "Подивитися, які предмети додали в гру", type: "A", img: "images/q6_b.jpg" }] },
             { id: 7, question: "Тобі дають один бонус. Що обереш?", options: [{ text: "Можливість створити власну гільдію", type: "S", img: "images/q7_a.jpg" }, { text: "Унікальний титул за дуже рідкісне досягнення", type: "A", img: "images/q7_b.jpg" }] },
             { id: 8, question: "Який спосіб заробітку тобі ближчий?", options: [{ text: "Мати власну таверну", type: "S", img: "images/q8_a.jpg" }, { text: "Робити карти незвіданих територій і продавати їх", type: "E", img: "images/q8_b.jpg" }] },
-            // UPDATED QUESTION 9
             { id: 9, question: "У тебе є вибір для нового сервера. Що обереш?", options: [{ text: "+800 активних гравців", type: "S", img: "images/q9_a.jpg" }, { text: "+5 великих локацій для дослідження", type: "E", img: "images/q9_b.jpg" }] },
             { id: 10, question: "Що для тебе важливіше в грі?", options: [{ text: "Грати в команді з іншими гравцями", type: "S", img: "images/q10_a.jpg" }, { text: "Знаходити способи використовувати гру не так, як задумали розробники", type: "E", img: "images/q10_b.jpg" }] },
             { id: 11, question: "Ти знайшов дивну головоломку. Що зробиш?", options: [{ text: "Покличеш друга розібратися разом", type: "S", img: "images/q11_a.jpg" }, { text: "Сам спробуєш зрозуміти, як це працює", type: "E", img: "images/q11_b.jpg" }] },
             { id: 12, question: "Монстр виявився набагато сильнішим, ніж ти очікував.", options: [{ text: "Запитаєш інших гравців, як його перемогти", type: "S", img: "images/q12_a.jpg" }, { text: "Спробуєш знайти власний спосіб його перемогти", type: "E", img: "images/q12_b.jpg" }] },
             { id: 13, question: "У групі залишилося одне місце. Кого обереш?", options: [{ text: "Паладина, який захищатиме союзників", type: "S", img: "images/q13_a.jpg" }, { text: "Рейнджера, який шукатиме приховані кімнати", type: "E", img: "images/q13_b.jpg" }] },
-            // TEXT REPLACEMENT: PvP to 1v1
             { id: 14, question: "Ти виграв 1v1-бій. Що приємніше?", options: [{ text: "Суперник захоче реваншу", type: "K", img: "images/q14_a.jpg" }, { text: "Суперник захоче грати з тобою", type: "S", img: "images/q14_b.jpg" }] },
             { id: 15, question: "Гравець забрав твій рідкісний лут. Що зробиш?", options: [{ text: "Запитаєш, навіщо він це зробив", type: "S", img: "images/q15_a.jpg" }, { text: "Запам'ятаєш його і полюватимеш на нього", type: "K", img: "images/q15_b.jpg" }] },
             { id: 16, question: "Що тебе більше захоплює?", options: [{ text: "Велика подія, де всі взаємодіють між собою", type: "S", img: "images/q16_a.jpg" }, { text: "Бій 1v1, де на кону ваш із суперником цінний лут", type: "K", img: "images/q16_b.jpg" }] },
-            // TEXT REPLACEMENT: PvP to 1v1
-            { id: 17, question: "Що принесло б більше задоволення?", options: [{ text: "Перемогти сильного суперника в 1v1", type: "K", img: "images/q17_a.jpg" }, { text: "Отримати запрошення до найкращої гільдії", type: "S", img: "images/q17_b.jpg" }] },
+            { id: 17, question: "Що принесло б більше задоволення?", options: [{ text: "Перемогти сильного суперника в 1v1 дуелі", type: "K", img: "images/q17_a.jpg" }, { text: "Отримати запрошення до найкращої гільдії", type: "S", img: "images/q17_b.jpg" }] },
             { id: 18, question: "Суперник контролює потрібну тобі територію. Що обереш?", options: [{ text: "Виб'єш його звідти силою", type: "K", img: "images/q18_a.jpg" }, { text: "Спробуєш домовитись про союз", type: "S", img: "images/q18_b.jpg" }] },
             { id: 19, question: "Що засмутило б тебе більше?", options: [{ text: "Стати слабшим за своїх суперників", type: "K", img: "images/q19_a.jpg" }, { text: "Втратити свою компанію друзів в грі", type: "S", img: "images/q19_b.jpg" }] },
             { id: 20, question: "Ти зустрів заклятого ворога, який хоче поговорити. Що зробиш?", options: [{ text: "Запропонуєш йому обмінятися інформацією", type: "S", img: "images/q20_a.jpg" }, { text: "Запропонуєш вирішити суперечку в бою", type: "K", img: "images/q20_b.jpg" }] },
@@ -320,14 +314,14 @@
             { id: 34, question: "Що було б крутіше?", options: [{ text: "Отримати предмет, який на 50% сильніший за звичайні", type: "A", img: "images/q34_a.jpg" }, { text: "Змусити сильнішого суперника втекти ще до початку бою", type: "K", img: "images/q34_b.jpg" }] },
             { id: 35, question: "Що принесло б більше задоволення?", options: [{ text: "Зібрати повний комплект рідкісного спорядження", type: "A", img: "images/q35_a.jpg" }, { text: "Перемогти гравця з набагато кращим спорядженням", type: "K", img: "images/q35_b.jpg" }] },
             { id: 36, question: "Ти можеш обрати один скілл:", options: [{ text: "Той, що завдає на 50% більше шкоди гравцям", type: "K", img: "images/q36_a.jpg" }, { text: "Той, що подвоює отримання досвіду", type: "A", img: "images/q36_b.jpg" }] },
-            { id: 37, question: "Ти можеш отримати одну з двох нагород:", options: [{ text: "+2 рівні персонажа одразу", type: "A", img: "images/q37_a.jpg" }, { text: "Амулет, який дає +50% швидкості атаки по інших гравцях", type: "K", img: "images/q37_b.jpg" }] },
+            // UPDATED QUESTION 37 (50% to 30%)
+            { id: 37, question: "Ти можеш отримати одну з двох нагород:", options: [{ text: "+2 рівні персонажа одразу", type: "A", img: "images/q37_a.jpg" }, { text: "Амулет, який дає +30% швидкості атаки по інших гравцях", type: "K", img: "images/q37_b.jpg" }] },
             { id: 38, question: "Ти можеш отримати одну нагороду", options: [{ text: "+1000 золота", type: "A", img: "images/q38_a.jpg" }, { text: "Зілля, яке робить невидимим на 10 секунд", type: "K", img: "images/q38_b.jpg" }] },
             { id: 39, question: "Що принесло б більше задоволення?", options: [{ text: "Побачити своє ім'я на першому місці в таблиці лідерів", type: "A", img: "images/q39_a.jpg" }, { text: "Перемогти найкращого друга в дуелі 1v1", type: "K", img: "images/q39_b.jpg" }] },
             { id: 40, question: "Ти можеш обрати один артефакт:", options: [{ text: "Артефакт із рандомним бонусом від +10% до +100%?", type: "E", img: "images/q40_a.jpg" }, { text: "Артефакт із гарантованим бонусом +50%?", type: "A", img: "images/q40_b.jpg" }] },
-            // NEW QUESTION 41 (E vs A)
-            { id: 41, question: "Який бонус здається крутішим?", options: [{ text: "🎲 15% шанс знайти рідкісний предмет замість звичайного", type: "E", img: "images/q41_a.jpg" }, { text: "💰 +25% золота з переможених монстрів", type: "A", img: "images/q41_b.jpg" }] },
-            // NEW QUESTION 42 (S vs E)
-            { id: 42, question: "Який бонус здається крутішим?", options: [{ text: "💚 Відновити +40% здоров'я союзникам", type: "S", img: "images/q42_a.jpg" }, { text: "🗝 25% шанс знайти ключ від прихованої скрині", type: "E", img: "images/q42_b.jpg" }] }
+            // NO EMOJIS IN NEW QUESTIONS
+            { id: 41, question: "Який бонус здається крутішим?", options: [{ text: "15% шанс знайти рідрісний предмет замість звичайного", type: "E", img: "images/q41_a.jpg" }, { text: "+25% золота з переможених монстрів", type: "A", img: "images/q41_b.jpg" }] },
+            { id: 42, question: "Який бонус здається крутішим?", options: [{ text: "Відновити +40% здоров'я союзникам", type: "S", img: "images/q42_a.jpg" }, { text: "25% шанс знайти ключ від прихованої скрині", type: "E", img: "images/q42_b.jpg" }] }
         ];
 
         const TYPE_DATA = {
@@ -343,14 +337,11 @@
             "A/K": "Твій стиль — домінувати за рахунок ідеальної прокачки, топового шмоту та чистої переваги у характеристиках.",
             "S/A": "Для тебе важливі друзі та спільна гра, але ти завжди прагнеш до того, щоб ваша група досягала топових результатів.",
             "S/E": "Ти душа компанії, яка любить ділитися відкриттями, вивчати лор та досліджувати ігрові світи разом із товаришами.",
-            // TEXT REPLACEMENT: PvP to 1v1
             "S/K": "Ти граєш заради взаємодії з іншими гравцями, але твоя улюблена форма зв'язку — це виклики, суперництво та драма.",
             "E/A": "Ти дослідник у душі, але з чітким механічним фокусом: знайти найрідкісніші речі й зібрати повний сет колекцій.",
             "E/S": "Ти шукач пригод, якому найбільше подобається ділитися секретами ігрового світу та допомагати іншим орієнтуватися у грі.",
             "E/K": "Ти хитрий мисливець. Знаєш кожну стежку та баг карти, щоб використовувати знання світу для несподіваних атак.",
-            // TEXT REPLACEMENT: PvP to 1v1
             "K/A": "Ти безжальний змагальник, для якого перемога над іншим гравцем є головним показником власного високого рівня.",
-            // TEXT REPLACEMENT: PvP to 1v1
             "K/S": "Ти шукач гострих емоцій. Бій для тебе — це головний спосіб соціальної взаємодії та отримання авторитету.",
             "K/E": "Ти непередбачуваний тактик. Тобі подобається заманювати ворогів у пастки, використовувати ландшафт і грати не за правилами."
         };
@@ -453,7 +444,7 @@
         }
 
         function updateCheckpointsAndMarker(currentNum) {
-            // UPDATED: Adapt checkpoints to 42 questions
+            // Adapt checkpoints to 42 questions
             const total = 42; 
             const pct = ((currentNum - 1) / (total - 1)) * 100;
             
@@ -557,7 +548,7 @@
             const pData = TYPE_DATA[primary];
             const sData = TYPE_DATA[secondary];
 
-            // UPDATED: adapt max score to 21 (42 total questions / 2 choices per pair)
+            // adapt max score to 21 (42 total questions / 2 choices per pair)
             const maxScore = 21; 
             const primaryPct = Math.round((scores[primary] / maxScore) * 100);
             const secondaryPct = Math.round((scores[secondary] / maxScore) * 100);
@@ -581,7 +572,7 @@
 
             sortedTypes.slice(2).forEach(t => {
                 const val = scores[t];
-                // UPDATED: adapt max score to 21
+                // adapt max score to 21
                 const pct = Math.round((val / maxScore) * 100);
                 const info = TYPE_DATA[t];
 
