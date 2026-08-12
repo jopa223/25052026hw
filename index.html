@@ -2,9 +2,8 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🎮 ЯКИЙ ТИ ГРАВЕЦЬ? — 40 QUESTIONS</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -14,6 +13,7 @@
             background-color: #0b0f19;
             color: #ffffff;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         .neo-card {
             background-color: #131b2e;
@@ -21,26 +21,46 @@
             box-shadow: 6px 6px 0px #000000;
         }
         
-        /* Side-by-Side Choice Cards (3:4) */
+        /* Choice Cards in Strict 3:4 Vertical Aspect Ratio */
         .option-card {
             background-color: #1e293b;
             border: 3px solid #000000;
             box-shadow: 4px 4px 0px #000000;
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                        background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                        box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
         }
-        .option-card:hover {
-            border-color: #fbbf24;
-            background-color: #26334d;
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 6px 8px 0px #f59e0b;
+
+        /* Desktop Smooth Hover */
+        @media (hover: hover) and (pointer: fine) {
+            .option-card:hover {
+                border-color: #fbbf24;
+                background-color: #26334d;
+                transform: translateY(-4px);
+                box-shadow: 0 0 16px rgba(245, 158, 11, 0.35), 6px 8px 0px #f59e0b;
+            }
+            .option-card:hover .card-arrow {
+                transform: translateX(5px);
+                color: #fbbf24;
+            }
         }
-        .option-card:active {
-            transform: translate(2px, 2px) scale(0.98);
-            box-shadow: 2px 2px 0px #000000;
+
+        /* Tap/Active Highlight for Mobile & Desktop */
+        .option-card:active, .option-card.selected-card {
+            border-color: #fbbf24 !important;
+            background-color: #26334d !important;
+            transform: translateY(2px) scale(0.96) !important;
+            box-shadow: 0 0 16px rgba(245, 158, 11, 0.5), 2px 2px 0px #000000 !important;
         }
-        .option-card:hover .card-arrow {
-            transform: translateX(5px);
-            color: #fbbf24;
+        .option-card:active .card-arrow, .option-card.selected-card .card-arrow {
+            transform: translateX(5px) !important;
+            color: #fbbf24 !important;
+        }
+
+        .card-arrow {
+            transition: transform 0.2s ease, color 0.2s ease;
         }
 
         .screen {
@@ -68,19 +88,33 @@
             border: 2px solid #334155;
             transition: all 0.2s ease;
         }
-        .feature-badge:hover {
-            border-color: #f59e0b;
-            transform: translateX(2px);
+
+        /* Pulsing Animated Start CTA Button */
+        @keyframes subtlePulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 4px 4px 0px #000000;
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 6px 6px 14px rgba(245, 158, 11, 0.45);
+            }
+        }
+        .btn-pulse {
+            animation: subtlePulse 2s infinite ease-in-out;
+        }
+        .btn-pulse:hover {
+            animation: none;
         }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-3 sm:p-5">
 
-    <div class="w-full max-w-lg neo-card rounded-2xl p-5 sm:p-6 relative overflow-hidden my-auto space-y-6">
+    <div class="w-full max-w-lg neo-card rounded-2xl p-5 sm:p-6 relative overflow-hidden my-auto space-y-5">
         
         <div id="start-screen" class="screen active text-center space-y-6 py-4">
             <div class="flex justify-center">
-                <div class="w-20 h-20 bg-slate-800/90 rounded-2xl border-3 border-black shadow-[4px_4px_0px_#000] flex items-center justify-center text-4xl animate-bounce">
+                <div class="w-20 h-20 bg-slate-800/90 rounded-2xl border-3 border-black shadow-[4px_4px_0px_#000] flex items-center justify-center text-4xl select-none">
                     ⚔️
                 </div>
             </div>
@@ -121,7 +155,7 @@
             </div>
 
             <div class="space-y-2 pt-2">
-                <button onclick="startGame()" class="w-full py-4 bg-amber-400 text-black font-black text-xl rounded-xl border-3 border-black shadow-[4px_4px_0px_#000] hover:bg-yellow-300 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_#000] uppercase tracking-wide transition-all cursor-pointer">
+                <button onclick="startGame()" class="w-full py-4 bg-amber-400 text-black font-black text-xl rounded-xl border-3 border-black shadow-[4px_4px_0px_#000] btn-pulse hover:bg-yellow-300 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_#000] uppercase tracking-wide transition-all cursor-pointer">
                     🚀 ПОЧАТИ ТЕСТ
                 </button>
                 <p class="text-[11px] text-slate-400 font-bold tracking-widest uppercase">
@@ -146,37 +180,39 @@
                 </div>
             </div>
 
-            <div class="py-2 text-center min-h-[60px] flex items-center justify-center px-2">
-                <h2 id="q-text" class="text-base sm:text-lg font-extrabold leading-snug text-slate-100 tracking-wide"></h2>
+            <div class="py-1 text-center flex items-center justify-center px-1">
+                <h2 id="q-text" class="text-[14px] font-extrabold leading-snug text-slate-100 tracking-wide"></h2>
             </div>
 
             <div id="cards-grid" class="grid grid-cols-2 gap-3 pt-1">
-                <button id="btn-a" type="button" class="option-card rounded-xl overflow-hidden flex flex-col justify-between text-left group cursor-pointer h-full">
-                    <div class="w-full aspect-[3/4] bg-slate-900 relative flex items-center justify-center border-b-2 border-black overflow-hidden pointer-events-none">
-                        <img id="img-a" src="" alt="Option A Visual" class="w-full h-full object-cover hidden">
-                        <div id="placeholder-a" class="text-slate-500 font-bold text-xs uppercase tracking-widest text-center p-2">
-                            CARD A (3:4)
+                <button id="btn-a" type="button" class="option-card rounded-xl overflow-hidden flex flex-col justify-between text-left group cursor-pointer w-full h-full">
+                    <div class="w-full aspect-[3/4] bg-slate-900 relative flex items-center justify-center border-b-2 border-black overflow-hidden pointer-events-none shrink-0">
+                        <img id="img-a" src="" alt="Option A" class="w-full h-full object-cover hidden">
+                        <div id="placeholder-a" class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950 flex flex-col items-center justify-center p-2 text-center">
+                            <span class="text-3xl mb-1">🎮</span>
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Варіант A</span>
                         </div>
                     </div>
-                    <div class="p-3 flex-1 flex flex-col justify-between space-y-3 pointer-events-none">
-                        <p id="text-a" class="text-xs sm:text-sm font-bold text-slate-100 leading-snug"></p>
-                        <div class="flex justify-end items-center pt-1">
-                            <span class="text-slate-400 font-black text-sm card-arrow transition-all">➔</span>
+                    <div class="p-2.5 sm:p-3 flex-1 flex flex-col justify-between space-y-2 pointer-events-none">
+                        <p id="text-a" class="text-[12px] font-bold text-slate-100 leading-snug my-auto"></p>
+                        <div class="flex justify-end items-center shrink-0 pt-0.5">
+                            <span class="text-slate-400 font-black text-xs card-arrow">➔</span>
                         </div>
                     </div>
                 </button>
 
-                <button id="btn-b" type="button" class="option-card rounded-xl overflow-hidden flex flex-col justify-between text-left group cursor-pointer h-full">
-                    <div class="w-full aspect-[3/4] bg-slate-900 relative flex items-center justify-center border-b-2 border-black overflow-hidden pointer-events-none">
-                        <img id="img-b" src="" alt="Option B Visual" class="w-full h-full object-cover hidden">
-                        <div id="placeholder-b" class="text-slate-500 font-bold text-xs uppercase tracking-widest text-center p-2">
-                            CARD B (3:4)
+                <button id="btn-b" type="button" class="option-card rounded-xl overflow-hidden flex flex-col justify-between text-left group cursor-pointer w-full h-full">
+                    <div class="w-full aspect-[3/4] bg-slate-900 relative flex items-center justify-center border-b-2 border-black overflow-hidden pointer-events-none shrink-0">
+                        <img id="img-b" src="" alt="Option B" class="w-full h-full object-cover hidden">
+                        <div id="placeholder-b" class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950 flex flex-col items-center justify-center p-2 text-center">
+                            <span class="text-3xl mb-1">⚡</span>
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Варіант B</span>
                         </div>
                     </div>
-                    <div class="p-3 flex-1 flex flex-col justify-between space-y-3 pointer-events-none">
-                        <p id="text-b" class="text-xs sm:text-sm font-bold text-slate-100 leading-snug"></p>
-                        <div class="flex justify-end items-center pt-1">
-                            <span class="text-slate-400 font-black text-sm card-arrow transition-all">➔</span>
+                    <div class="p-2.5 sm:p-3 flex-1 flex flex-col justify-between space-y-2 pointer-events-none">
+                        <p id="text-b" class="text-[12px] font-bold text-slate-100 leading-snug my-auto"></p>
+                        <div class="flex justify-end items-center shrink-0 pt-0.5">
+                            <span class="text-slate-400 font-black text-xs card-arrow">➔</span>
                         </div>
                     </div>
                 </button>
@@ -194,6 +230,15 @@
                 <span class="text-xs font-black text-amber-400 uppercase tracking-widest">ТВІЙ ПСИХОТИП ГРАВЦЯ</span>
                 <h2 id="combo-title" class="text-2xl sm:text-3xl font-black text-amber-400 uppercase tracking-wide mt-1"></h2>
             </div>
+
+            <div>
+                <button onclick="toggleDescription()" type="button" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm uppercase tracking-wider rounded-xl border-3 border-black shadow-[4px_4px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_#000] transition-all flex items-center justify-center gap-2 cursor-pointer">
+                    <span id="desc-btn-text">📖 ДИВИТИСЬ ОПИС</span>
+                </button>
+            </div>
+
+            <div id="combo-desc" class="hidden bg-slate-800/90 p-3.5 rounded-xl border-2 border-slate-700 text-left text-xs sm:text-sm text-slate-200 leading-relaxed transition-all">
+                </div>
 
             <div class="space-y-3 text-left">
                 <div class="bg-slate-800/90 p-4 rounded-xl border-2 border-amber-400 relative space-y-1 shadow-[4px_4px_0px_#f59e0b]">
@@ -223,15 +268,6 @@
                 </div>
             </div>
 
-            <div class="pt-1">
-                <button onclick="toggleDescription()" type="button" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm uppercase tracking-wider rounded-xl border-3 border-black shadow-[4px_4px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_#000] transition-all flex items-center justify-center gap-2 cursor-pointer">
-                    <span id="desc-btn-text">📖 ДИВИТИСЬ ОПИС</span>
-                </button>
-            </div>
-
-            <div id="combo-desc" class="hidden bg-slate-800/90 p-3.5 rounded-xl border-2 border-slate-700 text-left text-xs sm:text-sm text-slate-200 leading-relaxed transition-all">
-                </div>
-
             <div class="space-y-2 pt-1 text-left" id="bars-container">
                 </div>
 
@@ -244,16 +280,16 @@
 
     <script>
         // -------------------------------------------------------------
-        // FULL 40 QUESTIONS POOL
+        // FULL 40 UPDATED QUESTIONS POOL
         // -------------------------------------------------------------
         const rawQuestions = [
             { id: 1, question: "Ти готуєшся до нового квесту. Що приємніше?", options: [{ text: "Обговорити з друзями, хто що робитиме", type: "S", img: "images/q1_a.jpg" }, { text: "Прокачати персонажа перед квестом", type: "A", img: "images/q1_b.jpg" }] },
             { id: 2, question: "Ти відкрив новий режим гри. Що цікавіше?", options: [{ text: "Покликати друзів і зіграти разом", type: "S", img: "images/q2_a.jpg" }, { text: "Спробувати встановити найкращий результат", type: "A", img: "images/q2_b.jpg" }] },
-            { id: 3, question: "Ти отримав рідкісний предмет. Що приємніше?", options: [{ text: "Оснастити ним свого персонажа й отримати +9% до сили", type: "A", img: "images/q3_a.jpg" }, { text: "Подарувати його другу й дати йому +7% до сили", type: "S", img: "images/q3_b.jpg" }] },
+            { id: 3, question: "Ти знайшов два рідкісні предмети. Що обереш?", options: [{ text: "⚔️ Меч — +50% до твоєї атаки", type: "A", img: "images/q3_a.jpg" }, { text: "🛡️ Щит — +40% до твого захисту та +10% до захисту союзника", type: "S", img: "images/q3_b.jpg" }] },
             { id: 4, question: "Що ти хотів би почути про себе у грі?", options: [{ text: "«Він один із найсильніших гравців»", type: "A", img: "images/q4_a.jpg" }, { text: "«З ним завжди цікаво грати»", type: "S", img: "images/q4_b.jpg" }] },
-            { id: 5, question: "Що для тебе було б крутіше?", options: [{ text: "Щоб тебе знали майже всі на сервері", type: "S", img: "images/q5_a.jpg" }, { text: "Мати найбагатший інвентар на сервері", type: "A", img: "images/q5_b.jpg" }] },
-            { id: 6, question: "У гільдійному чаті з'явилися новини. Що відкриєш першим?", options: [{ text: "Дізнатися, хто з ким посварився", type: "S", img: "images/q6_a.jpg" }, { text: "Подивитися, які предмети додали в гру", type: "A", img: "images/q6_b.jpg" }] },
-            { id: 7, question: "Тобі дають один бонус. Що обереш?", options: [{ text: "Можливість створити власну гільдію", type: "S", img: "images/q7_a.jpg" }, { text: "Унікальний титул за рідкісне досягнення", type: "A", img: "images/q7_b.jpg" }] },
+            { id: 5, question: "Що для тебе було б крутіше?", options: [{ text: "Щоб тебе знали всі на сервері", type: "S", img: "images/q5_a.jpg" }, { text: "Мати найбагатший інвентар на сервері", type: "A", img: "images/q5_b.jpg" }] },
+            { id: 6, question: "У чаті з'явилися новини. Що відкриєш першим?", options: [{ text: "Дізнатися, хто з ким посварився", type: "S", img: "images/q6_a.jpg" }, { text: "Подивитися, які предмети додали в гру", type: "A", img: "images/q6_b.jpg" }] },
+            { id: 7, question: "Тобі дають один бонус. Що обереш?", options: [{ text: "Можливість створити власну гільдію", type: "S", img: "images/q7_a.jpg" }, { text: "Унікальний титул за дуже рідкісне досягнення", type: "A", img: "images/q7_b.jpg" }] },
             { id: 8, question: "Який спосіб заробітку тобі ближчий?", options: [{ text: "Мати власну таверну", type: "S", img: "images/q8_a.jpg" }, { text: "Робити карти незвіданих територій і продавати їх", type: "E", img: "images/q8_b.jpg" }] },
             { id: 9, question: "У тебе є вибір для нового сервера. Що обереш?", options: [{ text: "+700 активних гравців", type: "S", img: "images/q9_a.jpg" }, { text: "+5 великих локацій для дослідження", type: "E", img: "images/q9_b.jpg" }] },
             { id: 10, question: "Що для тебе важливіше в грі?", options: [{ text: "Грати в команді з іншими гравцями", type: "S", img: "images/q10_a.jpg" }, { text: "Знаходити способи використовувати гру не так, як задумали розробники", type: "E", img: "images/q10_b.jpg" }] },
@@ -262,34 +298,33 @@
             { id: 13, question: "У групі залишилося одне місце. Кого обереш?", options: [{ text: "Паладина, який захищатиме союзників", type: "S", img: "images/q13_a.jpg" }, { text: "Рейнджера, який шукатиме приховані кімнати", type: "E", img: "images/q13_b.jpg" }] },
             { id: 14, question: "Ти виграв PvP-бій. Що приємніше?", options: [{ text: "Суперник захоче реваншу", type: "K", img: "images/q14_a.jpg" }, { text: "Суперник захоче грати з тобою", type: "S", img: "images/q14_b.jpg" }] },
             { id: 15, question: "Гравець забрав твій рідкісний лут. Що зробиш?", options: [{ text: "Запитаєш, навіщо він це зробив", type: "S", img: "images/q15_a.jpg" }, { text: "Запам'ятаєш його і полюватимеш на нього", type: "K", img: "images/q15_b.jpg" }] },
-            { id: 16, question: "Що тебе більше захоплює?", options: [{ text: "Велика подія, де всі взаємодіють між собою", type: "S", img: "images/q16_a.jpg" }, { text: "Бій 1 на 1, де на кону ваш із суперником цінний лут", type: "K", img: "images/q16_b.jpg" }] },
-            { id: 17, question: "Що принесло б більше задоволення?", options: [{ text: "Перемогти сильного суперника в PvP", type: "K", img: "images/q17_a.jpg" }, { text: "Отримати запрошення до найкращої гільдії", type: "S", img: "images/q17_b.jpg" }] },
-            { id: 18, question: "Суперник контролює потрібну тобі територію. Що обереш?", options: [{ text: "Виб'єш його звідти силою", type: "K", img: "images/q18_a.jpg" }, { text: "Домовишся про союз", type: "S", img: "images/q18_b.jpg" }] },
+            { id: 16, question: "Що тебе більше захоплює?", options: [{ text: "Велика подія, де всі взаємодіють між собою", type: "S", img: "images/q16_a.jpg" }, { text: "Бій 1 vs 1, де на кону ваш із суперником цінний лут", type: "K", img: "images/q16_b.jpg" }] },
+            { id: 17, question: "Що принесло б більше задоволення?", options: [{ text: "Перемогти сильного суперника в PvP 1 vs 1", type: "K", img: "images/q17_a.jpg" }, { text: "Отримати запрошення до найкращої гільдії", type: "S", img: "images/q17_b.jpg" }] },
+            { id: 18, question: "Суперник контролює потрібну тобі територію. Що обереш?", options: [{ text: "Виб'єш його звідти силою", type: "K", img: "images/q18_a.jpg" }, { text: "Спробуєш домовитись про союз", type: "S", img: "images/q18_b.jpg" }] },
             { id: 19, question: "Що засмутило б тебе більше?", options: [{ text: "Стати слабшим за своїх суперників", type: "K", img: "images/q19_a.jpg" }, { text: "Втратити свою компанію друзів в грі", type: "S", img: "images/q19_b.jpg" }] },
             { id: 20, question: "Ти зустрів заклятого ворога, який хоче поговорити. Що зробиш?", options: [{ text: "Запропонуєш йому обмінятися інформацією", type: "S", img: "images/q20_a.jpg" }, { text: "Запропонуєш вирішити суперечку в бою", type: "K", img: "images/q20_b.jpg" }] },
-            { id: 21, question: "У грі з'явився новий бос. Що перевіриш першим?", options: [{ text: "Розібратися, які в нього атаки і здібності", type: "E", img: "images/q21_a.jpg" }, { text: "Які цінні предмети з нього можна отримати", type: "A", img: "images/q21_b.jpg" }] },
+            { id: 21, question: "У грі з'явився небезпечний бос. Що перевіриш першим?", options: [{ text: "Розібратися, які в нього загрозливі атаки і здібності", type: "E", img: "images/q21_a.jpg" }, { text: "Які цінні предмети з нього можна отримати", type: "A", img: "images/q21_b.jpg" }] },
             { id: 22, question: "Чим би ти хотів прославитися?", options: [{ text: "Знати приховані таємниці, про які інші не здогадуються", type: "E", img: "images/q22_a.jpg" }, { text: "Мати унікальне спорядження, якого немає в інших", type: "A", img: "images/q22_b.jpg" }] },
             { id: 23, question: "Що б ти хотів знати або мати першим?", options: [{ text: "Нову нагороду, якої ще немає у друзів", type: "A", img: "images/q23_a.jpg" }, { text: "Секрет у грі, про який ще ніхто не знає", type: "E", img: "images/q23_b.jpg" }] },
             { id: 24, question: "Ти шукаєш рідкісний предмет. Що ти дізнаєшся першим?", options: [{ text: "Де він захований і як туди дістатися", type: "E", img: "images/q24_a.jpg" }, { text: "Які випробування треба пройти, щоб його отримати", type: "A", img: "images/q24_b.jpg" }] },
             { id: 25, question: "Ти відкрив нове випробування. Що принесе більше задоволення?", options: [{ text: "Знайти нестандартний спосіб його пройти", type: "E", img: "images/q25_a.jpg" }, { text: "Набрати якнайбільше очок у цьому випробуванні", type: "A", img: "images/q25_b.jpg" }] },
-            { id: 26, question: "Що було б крутіше?", options: [{ text: "Розкрити секрет боса, який ще ніхто не знайшов", type: "E", img: "images/q26_a.jpg" }, { text: "Отримати предмет боса, який ще ніхто не здобув", type: "A", img: "images/q26_b.jpg" }] },
+            { id: 26, question: "Що було б крутіше?", options: [{ text: "Розкрити секрет локації, який ще ніхто не знайшов", type: "E", img: "images/q26_a.jpg" }, { text: "Отримати предмет боса, який ще ніхто не здобув", type: "A", img: "images/q26_b.jpg" }] },
             { id: 27, question: "Яку гільдію ти б обрав?", options: [{ text: "Алхіміків, які досліджують дивні властивості предметів", type: "E", img: "images/q27_a.jpg" }, { text: "Асасинів, які виконують замовлення на інших гравців", type: "K", img: "images/q27_b.jpg" }] },
             { id: 28, question: "У якому змаганні ти хотів би перемогти?", options: [{ text: "Знайти скарб, який ніхто не зміг знайти", type: "E", img: "images/q28_a.jpg" }, { text: "Перемогти суперника на арені", type: "K", img: "images/q28_b.jpg" }] },
-            { id: 29, question: "Ти бачиш, що на локації немає ворогів. Що зробиш?", options: [{ text: "Почнеш шукати те, що тут заховано", type: "E", img: "images/q29_a.jpg" }, { text: "Підеш туди, де є з ким битися", type: "K", img: "images/q29_b.jpg" }] },
+            { id: 29, question: "Ти бачиш, що на локації немає ворогів. Що зробиш?", options: [{ text: "Почнеш шукати те, що тут заховано?", type: "E", img: "images/q29_a.jpg" }, { text: "Підеш туди, де є з ким битися?", type: "K", img: "images/q29_b.jpg" }] },
             { id: 30, question: "Яку характеристику прокачаєш першою?", options: [{ text: "Інтелект", type: "E", img: "images/q30_a.jpg" }, { text: "Силу", type: "K", img: "images/q30_b.jpg" }] },
-            { id: 31, question: "Що принесло б більше задоволення?", options: [{ text: "Перемогти складного боса", type: "K", img: "images/q31_a.jpg" }, { text: "Дослідити нове підземелля", type: "E", img: "images/q31_b.jpg" }] },
+            { id: 31, question: "Що принесло б більше задоволення?", options: [{ text: "Перемогти нового боса", type: "K", img: "images/q31_a.jpg" }, { text: "Дослідити нове підземелля", type: "E", img: "images/q31_b.jpg" }] },
             { id: 32, question: "Ти дізнався, що інший гравець полює на тебе. Що обереш?", options: [{ text: "Заманиш його на територію, яку він не знає", type: "E", img: "images/q32_a.jpg" }, { text: "Знайдеш його й нападеш першим", type: "K", img: "images/q32_b.jpg" }] },
             { id: 33, question: "Ти познайомився з досвідченим гравцем. Що зробиш?", options: [{ text: "Обміняєшся з ним цікавими знаннями про гру", type: "E", img: "images/q33_a.jpg" }, { text: "Запропонуєш йому бій, щоб перевірити свої сили", type: "K", img: "images/q33_b.jpg" }] },
-            { id: 34, question: "Що було б крутіше?", options: [{ text: "Отримати предмет, який на 50% сильніший за ззвичайні", type: "A", img: "images/q34_a.jpg" }, { text: "Змусити сильного суперника втекти ще до початку бою", type: "K", img: "images/q34_b.jpg" }] },
+            { id: 34, question: "Що було б крутіше?", options: [{ text: "Отримати предмет, який на 50% сильніший за звичайні", type: "A", img: "images/q34_a.jpg" }, { text: "Змусити сильнішого суперника втекти ще до початку бою", type: "K", img: "images/q34_b.jpg" }] },
             { id: 35, question: "Що принесло б більше задоволення?", options: [{ text: "Зібрати повний комплект рідкісного спорядження", type: "A", img: "images/q35_a.jpg" }, { text: "Перемогти гравця з набагато кращим спорядженням", type: "K", img: "images/q35_b.jpg" }] },
-            { id: 36, question: "Ти можеш обрати один скілл:", options: [{ text: "Той, що завдає на 50% більше шкоди гравцям (+DMG)", type: "K", img: "images/q36_a.jpg" }, { text: "Той, що подвоює отримання досвіду (+XP)", type: "A", img: "images/q36_b.jpg" }] },
-            { id: 37, question: "Ти можеш отримати одну з двох нагород:", options: [{ text: "+2 рівні одразу", type: "A", img: "images/q37_a.jpg" }, { text: "Амулет, який дає +50% швидкості атаки по інших гравцях", type: "K", img: "images/q37_b.jpg" }] },
-            { id: 38, question: "Ти можеш отримати одну нагороду:", options: [{ text: "+1000 золота", type: "A", img: "images/q38_a.jpg" }, { text: "Зілля, яке робить невидимим на 10 секунд", type: "K", img: "images/q38_b.jpg" }] },
-            { id: 39, question: "Що принесло б більше задоволення?", options: [{ text: "Побачити своє ім'я на першому місці в таблиці лідерів", type: "A", img: "images/q39_a.jpg" }, { text: "Перемогти найкращого друга в дуелі 1 на 1", type: "K", img: "images/q39_b.jpg" }] },
-            { id: 40, question: "Ти можеш обрати один артефакт:", options: [{ text: "Артефакт із невідомим бонусом від +10% до +100%", type: "E", img: "images/q40_a.jpg" }, { text: "Артефакт із гарантованим бонусом +50%", type: "A", img: "images/q40_b.jpg" }] }
+            { id: 36, question: "Ти можеш обрати один скілл:", options: [{ text: "Той, що завдає на 50% більше шкоди гравцям", type: "K", img: "images/q36_a.jpg" }, { text: "Той, що подвоює отримання досвіду", type: "A", img: "images/q36_b.jpg" }] },
+            { id: 37, question: "Ти можеш отримати одну з двох нагород:", options: [{ text: "+2 рівні персонажа одразу", type: "A", img: "images/q37_a.jpg" }, { text: "Амулет, який дає +50% швидкості атаки по інших гравцях", type: "K", img: "images/q37_b.jpg" }] },
+            { id: 38, question: "Ти можеш отримати одну нагороду", options: [{ text: "+1000 золота", type: "A", img: "images/q38_a.jpg" }, { text: "Зілля, яке робить невидимим на 10 секунд", type: "K", img: "images/q38_b.jpg" }] },
+            { id: 39, question: "Що принесло б більше задоволення?", options: [{ text: "Побачити своє ім'я на першому місці в таблиці лідерів", type: "A", img: "images/q39_a.jpg" }, { text: "Перемогти найкращого друга в дуелі 1 vs 1", type: "K", img: "images/q39_b.jpg" }] },
+            { id: 40, question: "Ти можеш обрати один артефакт:", options: [{ text: "Артефакт із рандомним бонусом від +10% до +100%?", type: "E", img: "images/q40_a.jpg" }, { text: "Артефакт із гарантованим бонусом +50%?", type: "A", img: "images/q40_b.jpg" }] }
         ];
 
-        // TYPE METADATA
         const TYPE_DATA = {
             A: { name: "Achiever", icon: "🏆", color: "bg-yellow-500", text: "text-yellow-400" },
             S: { name: "Socializer", icon: "🤝", color: "bg-green-500", text: "text-green-400" },
@@ -297,7 +332,6 @@
             K: { name: "Killer", icon: "⚔️", color: "bg-red-500", text: "text-red-400" }
         };
 
-        // DUAL TYPE DESCRIPTIONS
         const DUAL_DESCRIPTIONS = {
             "A/S": "Ти любиш досягати конкретних результатів, але найбільше задоволення отримуєш, коли робиш це разом із командою та друзями.",
             "A/E": "Ти максималіст, який прагне закрити гру на 100%, вивчити кожну таємну локацію та отримати всі можливі ачівки.",
@@ -313,12 +347,27 @@
             "K/E": "Ти непередбачуваний тактик. Тобі подобається заманювати ворогів у пастки, використовувати ландшафт і грати не за правилами."
         };
 
-        // GAME STATE
         let activeQuestions = [];
         let currentIndex = 0;
         let userAnswers = [];
         let scores = { S: 0, E: 0, A: 0, K: 0 };
         let audioCtx = null;
+
+        function clearCardFocus() {
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
+            const btnA = document.getElementById('btn-a');
+            const btnB = document.getElementById('btn-b');
+            if (btnA) {
+                btnA.blur();
+                btnA.classList.remove('selected-card');
+            }
+            if (btnB) {
+                btnB.blur();
+                btnB.classList.remove('selected-card');
+            }
+        }
 
         function triggerHaptic(type = 'tap') {
             if (navigator && typeof navigator.vibrate === 'function') {
@@ -329,11 +378,7 @@
 
         function triggerConfetti() {
             if (typeof confetti === 'function') {
-                confetti({
-                    particleCount: 120,
-                    spread: 80,
-                    origin: { y: 0.6 }
-                });
+                confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
             }
         }
 
@@ -430,6 +475,7 @@
         }
 
         function loadQuestion() {
+            clearCardFocus();
             const q = activeQuestions[currentIndex];
             
             const currentNum = currentIndex + 1;
@@ -446,26 +492,32 @@
             document.getElementById('text-b').innerText = optB.text;
             loadCardImage('img-b', 'placeholder-b', optB.img);
 
-            document.getElementById('btn-a').onclick = () => selectOption(optA.type);
-            document.getElementById('btn-b').onclick = () => selectOption(optB.type);
+            document.getElementById('btn-a').onclick = () => selectOption('btn-a', optA.type);
+            document.getElementById('btn-b').onclick = () => selectOption('btn-b', optB.type);
         }
 
-        function selectOption(type) {
+        function selectOption(btnId, type) {
+            const btn = document.getElementById(btnId);
+            if (btn) btn.classList.add('selected-card');
+
             triggerHaptic('tap');
             playSound(500, 0.1);
             
             userAnswers.push(type);
             scores[type]++;
 
-            if (currentIndex < activeQuestions.length - 1) {
-                currentIndex++;
-                loadQuestion();
-            } else {
-                showResults();
-            }
+            setTimeout(() => {
+                if (currentIndex < activeQuestions.length - 1) {
+                    currentIndex++;
+                    loadQuestion();
+                } else {
+                    showResults();
+                }
+            }, 140);
         }
 
         function goBack() {
+            clearCardFocus();
             triggerHaptic('tap');
             playSound(350, 0.1);
             
@@ -480,12 +532,12 @@
         }
 
         function showResults() {
+            clearCardFocus();
             triggerHaptic('victory');
             triggerConfetti();
             playSound(700, 0.35);
             showScreen('results-screen');
 
-            // Ensure description stays collapsed on arrival
             document.getElementById('combo-desc').classList.add('hidden');
             document.getElementById('desc-btn-text').innerText = "📖 ДИВИТИСЬ ОПИС";
 
@@ -499,24 +551,20 @@
             const primaryPct = Math.round((scores[primary] / 20) * 100);
             const secondaryPct = Math.round((scores[secondary] / 20) * 100);
 
-            // Title
             document.getElementById('combo-title').innerText = `${pData.name} / ${sData.name}`;
 
             const key = `${primary}/${secondary}`;
             const descText = DUAL_DESCRIPTIONS[key] || `${pData.name} із сильно вираженими рисами ${sData.name}.`;
             document.getElementById('combo-desc').innerText = descText;
 
-            // Set Primary Card (Top)
             document.getElementById('p-icon').innerText = pData.icon;
             document.getElementById('p-name').innerText = pData.name;
             document.getElementById('p-pct').innerText = `${primaryPct}%`;
 
-            // Set Secondary Card (Underneath)
             document.getElementById('s-icon').innerText = sData.icon;
             document.getElementById('s-name').innerText = sData.name;
             document.getElementById('s-pct').innerText = `${secondaryPct}%`;
 
-            // Render remaining 2 types in percentage bars ONLY
             const barsContainer = document.getElementById('bars-container');
             barsContainer.innerHTML = '';
 
